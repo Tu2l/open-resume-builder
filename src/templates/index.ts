@@ -1,3 +1,5 @@
+import { getBaseUrl } from "@/lib/utils";
+
 // Define template types
 type TemplateName = 'classic' | 'modern' | 'creative';
 
@@ -14,7 +16,7 @@ const loadTemplate = async (templateName: TemplateName): Promise<string> => {
     return templateCache[templateName];
   }
 
-  const url = `/templates/html/${templateName}.html`;
+  const url = `${getBaseUrl()}/templates/html/${templateName}.html`;
   const response = await fetch(url, {
     method: 'GET',
     headers: { 'Content-Type': 'text/html' },
