@@ -51,7 +51,6 @@ export default function HomePage() {
 
     const currentHtml = enhancedResumeHtml || originalResumeHtml;
     const [editedHtml, setEditedHtml] = useState(currentHtml || '');
-    const [printReadyHtml, setPrintReadyHtml] = useState(currentHtml || '');
 
     useEffect(() => {
         if (currentHtml) {
@@ -321,7 +320,7 @@ export default function HomePage() {
     }
 
     const handlePrint = () => {
-        const content = printReadyHtml;
+        const content = editedHtml;
         if (!content) {
             toast({ variant: 'destructive', title: 'Error', description: 'Could not find resume content to print.' });
             return;
@@ -343,7 +342,7 @@ export default function HomePage() {
     };
 
     const handleDownloadHtml = () => {
-        const content = printReadyHtml;
+        const content = editedHtml;
         if (!content) {
             toast({ variant: 'destructive', title: 'Error', description: 'Could not find resume content to download.' });
             return;
@@ -413,7 +412,6 @@ export default function HomePage() {
                     onSaveHtml={handleSaveHtml}
                     onEditHtmlChange={setEditedHtml}
                     onSubmitEnhance={handleEnhanceSubmit}
-                    setPrintReadyHtml={setPrintReadyHtml}
                 />
             ),
         };
