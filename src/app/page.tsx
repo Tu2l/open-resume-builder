@@ -7,15 +7,10 @@ import { useForm } from 'react-hook-form';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import { useToast } from '@/hooks/use-toast';
-import { ResumeTemplate, templates, testData } from '@/lib/data';
-import availableModels from '@/lib/models.json';
+import { resumeFormDefaultValues, ResumeTemplate, templates, testData } from '@/lib/resume-template-data';
+import availableModels from '@/lib/ai/gemini_models.json';
 import { jobDescriptionSchema, resumeFormSchema, type JobDescriptionValues, type ResumeFormValues } from '@/lib/schema';
 import { getResumeAsPlainText, renderSimpleTemplate } from '@/lib/template-helpers';
-
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Download, FileText, FileType, RefreshCw, Share, TestTube2 } from 'lucide-react';
 
 // Form Step Components
 import ErrorView from '@/components/form/ErrorView';
@@ -24,71 +19,18 @@ import LoadingView from '@/components/form/LoadingView';
 import ResultStep from '@/components/form/ResultStep';
 import TemplateSelectionStep from '@/components/form/TemplateSelectionStep';
 import WelcomeStep from '@/components/form/WelcomeStep';
+import { extractJsonFromResponse } from '@/lib/utils';
+import { callGeminiApi, prepareResumeAnalysisPrompt, prepareResumeImprovementPrompt } from '../lib/ai/gemini-helper';
+import PopDialog from '@/components/PopDialog';
+import { AppState } from '../lib/AppState';
+import HeaderToolbar from '@/components/HeaderToolbar';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
-
-/**
- * Defines the possible states of the application UI.
- */
-type AppState =
-    | { step: 'welcome' }
-    | { step: 'template' }
-    | { step: 'form'; currentFormStep: number }
-    | { step: 'result'; jobDescription?: string; analysis?: string };
 
 /**
  * Defines the sequence of steps in the resume creation form.
  */
 const formSteps = ['Contact', 'Summary', 'Experience', 'Projects', 'Education', 'Certifications', 'Skills'];
-
-/**
- * Extracts a JSON object from a string, which may contain markdown code fences.
- */
-const extractJsonFromResponse = (text: string): any => {
-    try {
-        const jsonBlockRegex = /```json\s*([\s\S]*?)\s*```/;
-        const match = text.match(jsonBlockRegex);
-        if (match && match[1]) {
-            return JSON.parse(match[1]);
-        }
-    } catch (e) {
-        console.error("Failed to parse JSON from code block:", e);
-    }
-
-    try {
-        const firstBrace = text.indexOf('{');
-        const lastBrace = text.lastIndexOf('}');
-        if (firstBrace !== -1 && lastBrace > firstBrace) {
-            return JSON.parse(text.substring(firstBrace, lastBrace + 1));
-        }
-    } catch (e) {
-        console.error("Failed to parse JSON from substring:", e);
-    }
-
-    throw new Error("Could not find or parse a valid JSON object in the AI's response.");
-};
-
-
-/**
- * A helper function to call the Gemini API from the client-side.
- */
-const callGeminiApi = async (prompt: string, apiKey: string, model: string) => {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-    });
-
-    if (!response.ok) {
-        const errorBody = await response.json();
-        console.error("Gemini API Error Body:", errorBody);
-        throw new Error(`Gemini API Error: ${errorBody.error?.message || response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.candidates[0].content.parts[0].text;
-};
-
 
 export default function HomePage() {
     const [appState, setAppState] = useState<AppState>({ step: 'welcome' });
@@ -120,19 +62,9 @@ export default function HomePage() {
 
     const { toast } = useToast();
 
-    const defaultFormValues: ResumeFormValues = {
-        fullName: '', email: '', phone: '', website: '', linkedin: '', github: '', summary: '',
-        experience: [{ company: '', location: '', title: '', startDate: '', endDate: '', responsibilities: [''] }],
-        projects: [{ name: '', description: '', technologies: '', url: '' }],
-        education: [{ institution: '', location: '', degree: '', graduationDate: '' }],
-        certifications: [{ name: '', issuer: '', date: '', url: '' }],
-        skills: '',
-        template: 'modern',
-    };
-
     const resumeForm = useForm<ResumeFormValues>({
         resolver: zodResolver(resumeFormSchema),
-        defaultValues: defaultFormValues,
+        defaultValues: resumeFormDefaultValues,
         mode: 'onChange',
     });
 
@@ -173,7 +105,7 @@ export default function HomePage() {
 
     const handleResetForm = () => {
         const action = () => {
-            resumeForm.reset(defaultFormValues);
+            resumeForm.reset(resumeFormDefaultValues);
             setAppState({ step: 'form', currentFormStep: 0 });
             toast({ title: 'Form Reset', description: 'All fields have been cleared.' });
         };
@@ -275,16 +207,7 @@ export default function HomePage() {
         try {
             // Step 1: Get AI Analysis
             setLoadingMessage('Analyzing your resume and the job description...');
-            const analysisPrompt = `You are an AI resume expert. Analyze the provided resume and job description, and provide suggestions on how to improve the resume to better align with the job description. Focus on skills, experience, and keywords.
-
-        Resume:
-        ${resumePlainText}
-        
-        Job Description:
-        ${jobDescriptionText}
-        
-        Return only the analysis as a plain text string.`;
-
+            const analysisPrompt = prepareResumeAnalysisPrompt(resumePlainText, jobDescriptionText);
             const analysisResult = await callGeminiApi(analysisPrompt, apiKey, model);
 
             if (!analysisResult) {
@@ -294,31 +217,7 @@ export default function HomePage() {
             // Step 2: Generate updated resume JSON
             setLoadingMessage('Applying enhancements to your resume...');
             const jsonSchema = JSON.stringify(zodToJsonSchema(resumeFormSchema), null, 2);
-            const generationPrompt = `You are an expert resume writer and data extraction specialist. Your task is to rewrite the provided "Original Resume" to be better tailored for the "Job Description", using the "AI Analysis" as a guide. Then, you must output the result as a single, valid JSON object that strictly conforms to the provided "JSON Schema".
-
-        Instructions:
-        1.  The output MUST be a single, valid JSON object wrapped in \`\`\`json ... \`\`\` markdown fences. Do not include any text, notes, or explanations outside of the JSON object. Just return the JSON.
-        2.  Rewrite the resume content, focusing on the summary and experience sections to align them with the target job.
-        3.  Incorporate keywords and skills from the job description where appropriate.
-        4.  Ensure all sections from the original resume (contact info, education, projects, etc.) are included in the final output.
-        5.  For the 'responsibilities' within each 'experience' item, format them as a JSON array of strings. Each sentence or bullet point should be a separate string in the array.
-        6.  For the 'skills' field, parse the user's input into a structured string. Example: "Languages: Java, Kotlin; Frameworks: React, NextJs".
-        7.  If a required field from the schema is missing from the resume text (like 'email'), create a realistic placeholder.
-
-        JSON Schema to follow:
-        \`\`\`json
-        ${jsonSchema}
-        \`\`\`
-
-        Original Resume:
-        ${resumePlainText}
-        
-        Job Description:
-        ${jobDescriptionText}
-        
-        AI Analysis:
-        ${analysisResult}
-        `;
+            const generationPrompt = prepareResumeImprovementPrompt(jsonSchema, resumePlainText, jobDescriptionText, analysisResult);
 
             const generationResultText = await callGeminiApi(generationPrompt, apiKey, model);
             const generationResultJson = extractJsonFromResponse(generationResultText);
@@ -540,63 +439,24 @@ export default function HomePage() {
 
     return (
         <TooltipProvider>
-            <AlertDialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>{confirmDialogContent.title}</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            {confirmDialogContent.description}
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => {
-                            confirmDialogContent.onConfirm();
-                            setIsConfirmDialogOpen(false);
-                        }}>
-                            Confirm
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <PopDialog
+                isConfirmDialogOpen={isConfirmDialogOpen}
+                setIsConfirmDialogOpen={setIsConfirmDialogOpen}
+                confirmDialogContent={confirmDialogContent}
+            />
 
             <div className="flex flex-col min-h-dvh bg-secondary/50 items-center justify-center">
-                <header className="fixed top-0 z-30 w-full border-b bg-background/80 backdrop-blur-sm">
-                    <div className="container mx-auto flex h-auto min-h-16 flex-col sm:flex-row items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-                        <div className="flex items-center gap-3">
-                            <FileText className="h-7 w-7 text-primary" />
-                            <h1 className="text-2xl font-bold tracking-tight">Resume AI</h1>
-                        </div>
-                        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2">
-                            {appState.step === 'form' && (
-                                <>
-                                    {!!resumeForm.watch('fullName') && (
-                                        <Button type="button" variant="outline" size="sm" onClick={handleResetForm}>
-                                            <RefreshCw className="mr-2" /> Reset
-                                        </Button>
-                                    )}
-                                    <Button type="button" variant="outline" size="sm" onClick={handleFillWithSampleData}>
-                                        <TestTube2 className="mr-2" /> Fill with Sample Data
-                                    </Button>
-                                </>
-                            )}
-                            {appState.step === 'result' && (originalResumeHtml || enhancedResumeHtml) && (
-                                <>
-                                    <Button onClick={handleExport} size="sm" variant="outline"><Share className="mr-2" /> Export Data</Button>
-                                    <Button onClick={handleDownloadHtml} size="sm" variant="outline"><Download className="mr-2" /> HTML</Button>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button onClick={handlePrint} size="sm" variant="default"><FileType className="mr-2" /> PDF</Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Use browser&apos;s &quot;Save as PDF&quot; option</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </header>
+                <HeaderToolbar 
+                    appState={appState}
+                    resumeForm={resumeForm}
+                    handleResetForm={handleResetForm}
+                    handleFillWithSampleData={handleFillWithSampleData}
+                    originalResumeHtml={originalResumeHtml}
+                    enhancedResumeHtml={enhancedResumeHtml}
+                    handleExport={handleExport}
+                    handleDownloadHtml={handleDownloadHtml}
+                    handlePrint={handlePrint}
+                />
 
                 <main className="flex-1 container mx-auto p-4 pt-36 pb-36 sm:pt-24 sm:pb-24 lg:p-8 lg:pt-28 lg:pb-28 flex items-center justify-center">
                     {renderContent()}
@@ -605,3 +465,4 @@ export default function HomePage() {
         </TooltipProvider>
     );
 }
+

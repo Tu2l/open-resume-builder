@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
 import { ResumeFormValues } from '@/lib/schema';
-import { templates } from '@/lib/data';
+import { templates } from '@/lib/resume-template-data';
 import { TemplateThumbnail } from '@/components/resume-templates';
 
 interface TemplateSelectionStepProps {
