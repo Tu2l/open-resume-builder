@@ -1,32 +1,29 @@
 
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
-import { getResumeAsPlainText, renderSimpleTemplate } from '@/lib/template-helpers';
-import { resumeFormSchema, jobDescriptionSchema, type ResumeFormValues, type JobDescriptionValues } from '@/lib/schema';
 import { ResumeTemplate, templates, testData } from '@/lib/data';
 import availableModels from '@/lib/models.json';
-import { TemplateThumbnail } from '@/components/resume-templates';
+import { jobDescriptionSchema, resumeFormSchema, type JobDescriptionValues, type ResumeFormValues } from '@/lib/schema';
+import { getResumeAsPlainText, renderSimpleTemplate } from '@/lib/template-helpers';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Download, FileText, Loader2, Wand2, FileWarning, Pencil, Eye, FileType, Check, PlusCircle, Trash2, ArrowRight, ArrowLeft, RefreshCw, Save, History, Import, Share, TestTube2, Home } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Download, FileText, FileType, RefreshCw, Share, TestTube2 } from 'lucide-react';
+
+// Form Step Components
+import ErrorView from '@/components/form/ErrorView';
+import FormStepsContainer from '@/components/form/FormStepsContainer';
+import LoadingView from '@/components/form/LoadingView';
+import ResultStep from '@/components/form/ResultStep';
+import TemplateSelectionStep from '@/components/form/TemplateSelectionStep';
+import WelcomeStep from '@/components/form/WelcomeStep';
 
 
 /**
@@ -148,26 +145,6 @@ export default function HomePage() {
         }
     });
 
-    const { fields: experienceFields, append: appendExperience, remove: removeExperience } = useFieldArray({
-        control: resumeForm.control,
-        name: "experience",
-    });
-
-    const { fields: educationFields, append: appendEducation, remove: removeEducation } = useFieldArray({
-        control: resumeForm.control,
-        name: "education",
-    });
-
-    const { fields: projectFields, append: appendProject, remove: removeProject } = useFieldArray({
-        control: resumeForm.control,
-        name: "projects",
-    });
-
-    const { fields: certificationFields, append: appendCertification, remove: removeCertification } = useFieldArray({
-        control: resumeForm.control,
-        name: "certifications",
-    });
-
     const triggerValidation = async (fields: (keyof ResumeFormValues)[]) => {
         return await resumeForm.trigger(fields);
     };
@@ -276,8 +253,8 @@ export default function HomePage() {
     };
 
     const generateOriginalResumeFromTemplate = (selectedTemplate: ResumeTemplate, data: ResumeFormValues) => {
-        selectedTemplate.html.
-            then(templateHtml => {
+        selectedTemplate.html
+            .then(templateHtml => {
                 const html = renderSimpleTemplate(templateHtml, data);
                 setOriginalResumeHtml(html);
                 setEnhancedResumeHtml(null);
@@ -286,7 +263,6 @@ export default function HomePage() {
             .catch(err => {
                 throw new Error(`Failed to load template: ${err.message}`);
             });
-
     }
 
     const handleEnhanceSubmit = async (data: JobDescriptionValues) => {
@@ -368,9 +344,9 @@ export default function HomePage() {
         }
     }
 
-    const generateEnhancedResumeFromTemplate = (selectedTemplate: ResumeTemplate, validatedData: any, jobDescriptionText: string, analysisResult: any) => {
-        selectedTemplate.html.
-            then(templateHtml => {
+    const generateEnhancedResumeFromTemplate = (selectedTemplate: ResumeTemplate, validatedData: ResumeFormValues, jobDescriptionText: string, analysisResult: string) => {
+        selectedTemplate.html
+            .then(templateHtml => {
                 const html = renderSimpleTemplate(templateHtml, validatedData);
                 setEnhancedResumeHtml(html);
                 setAppState({ step: 'result', jobDescription: jobDescriptionText, analysis: analysisResult });
@@ -493,419 +469,72 @@ export default function HomePage() {
         toast({ title: "Changes Saved", description: "Your manual HTML edits have been saved." });
     };
 
+    // Memoize step components for performance
     const renderContent = () => {
+        const stepComponentMap = {
+            welcome: (
+                <WelcomeStep
+                    setAppState={setAppState}
+                    importFileInputRef={importFileInputRef}
+                    handleImport={handleImport}
+                />
+            ),
+            template: (
+                <TemplateSelectionStep
+                    form={resumeForm}
+                    onBack={() => setAppState({ step: 'welcome' })}
+                    onNext={() => setAppState({ step: 'form', currentFormStep: 0 })}
+                />
+            ),
+            form: (
+                <FormStepsContainer
+                    form={resumeForm}
+                    currentStep={appState.step === 'form' ? appState.currentFormStep : 0}
+                    formSteps={formSteps}
+                    onPrevStep={handlePrevStep}
+                    onNextStep={handleNextStep}
+                    onChangeTemplate={() => setAppState({ step: 'template' })}
+                    onGenerateResume={handleGenerateResume}
+                />
+            ),
+            result: (
+                <ResultStep
+                    jdForm={jdForm}
+                    isLoading={isLoading}
+                    error={error}
+                    editedHtml={editedHtml}
+                    isEditingHtml={isEditingHtml}
+                    enhancedResumeHtml={enhancedResumeHtml}
+                    analysis={appState.analysis}
+                    onBackToEdit={() => setAppState({ step: 'form', currentFormStep: formSteps.length - 1 })}
+                    onStartNewResume={() => setAppState({ step: 'welcome' })}
+                    onRevert={handleRevert}
+                    onEditHtml={() => setIsEditingHtml(true)}
+                    onSaveHtml={handleSaveHtml}
+                    onEditHtmlChange={setEditedHtml}
+                    onSubmitEnhance={handleEnhanceSubmit}
+                />
+            ),
+        };
+
+        // Only re-render loading/error views when relevant state changes
         if (isLoading) {
+            return <LoadingView message={loadingMessage} />;
+        }
+
+        if (error && appState.step !== 'result') {
             return (
-                <Card className="shadow-lg w-full max-w-lg">
-                    <CardContent className="pt-6">
-                        <div className="flex flex-col items-center justify-center text-center p-8">
-                            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                            <p className="mt-4 text-muted-foreground">{loadingMessage}</p>
-                        </div>
-                    </CardContent>
-                </Card>
+                <ErrorView
+                    error={error}
+                    onTryAgain={() => {
+                        setError(null);
+                        setAppState({ step: 'welcome' });
+                    }}
+                />
             );
         }
 
-        if (error && appState.step !== 'result') { // Show general error screen
-            return (
-                <Card className="shadow-lg w-full max-w-lg">
-                    <CardContent className="pt-6">
-                        <Alert variant="destructive" className="my-4">
-                            <FileWarning className="h-4 w-4" />
-                            <AlertTitle>Error</AlertTitle>
-                            <AlertDescription>{error}</AlertDescription>
-                        </Alert>
-                        <Button onClick={() => { setError(null); setAppState({ step: 'welcome' }); }} className="w-full">
-                            <RefreshCw className="mr-2" /> Try Again
-                        </Button>
-                    </CardContent>
-                </Card>
-            )
-        }
-
-        switch (appState.step) {
-            case 'welcome':
-                return (
-                    <Card className="shadow-lg w-full max-w-lg">
-                        <CardHeader className="text-center">
-                            <CardTitle className="text-3xl">Resume AI</CardTitle>
-                            <CardDescription>Create a professional resume in minutes.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="grid gap-4">
-                            <Button onClick={() => setAppState({ step: 'template' })} variant="default" size="lg">
-                                <Pencil className="mr-2" /> Start From Scratch
-                            </Button>
-                        </CardContent>
-                        <CardFooter className="flex-col gap-2">
-                            <p className="text-sm text-muted-foreground">Have a saved session?</p>
-                            <Button onClick={() => importFileInputRef.current?.click()} variant="link" className="p-0 h-auto">
-                                <Import className="mr-2" /> Import from JSON
-                            </Button>
-                            <input type="file" ref={importFileInputRef} onChange={handleImport} accept=".json" className="hidden" />
-                        </CardFooter>
-                    </Card>
-                );
-            case 'template':
-                const selectedTemplateId = resumeForm.watch('template');
-                return (
-                    <Card className="shadow-lg max-w-3xl w-full">
-                        <Form {...resumeForm}>
-                            <form onSubmit={(e) => { e.preventDefault(); setAppState({ step: 'form', currentFormStep: 0 }); }}>
-                                <CardHeader>
-                                    <CardTitle className="text-2xl">Step 1: Choose a Template</CardTitle>
-                                    <CardDescription>Select a visual style for your resume.</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <FormField
-                                        control={resumeForm.control}
-                                        name="template"
-                                        render={({ field }) => (
-                                            <FormItem className="space-y-4">
-                                                <FormControl>
-                                                    <RadioGroup
-                                                        onValueChange={field.onChange}
-                                                        defaultValue={field.value}
-                                                        className="grid grid-cols-2 md:grid-cols-3 gap-4"
-                                                    >
-                                                        {templates.map((template) => (
-                                                            <FormItem key={template.id}>
-                                                                <FormControl>
-                                                                    <RadioGroupItem value={template.id} className="sr-only" />
-                                                                </FormControl>
-                                                                <FormLabel
-                                                                    className={cn(
-                                                                        "block rounded-lg border-2 border-muted bg-popover p-2 hover:border-accent cursor-pointer transition-all",
-                                                                        field.value === template.id && "border-primary ring-2 ring-primary"
-                                                                    )}
-                                                                >
-                                                                    <div className="relative aspect-[4/5.6] w-full overflow-hidden rounded-md">
-                                                                        <TemplateThumbnail templateId={template.id} />
-                                                                        {field.value === template.id && (
-                                                                            <div className="absolute inset-0 bg-primary/40 flex items-center justify-center">
-                                                                                <Check className="h-8 w-8 text-primary-foreground" />
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                    <span className="mt-2 block text-center font-medium">{template.name}</span>
-                                                                </FormLabel>
-                                                            </FormItem>
-                                                        ))}
-                                                    </RadioGroup>
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </CardContent>
-                                <CardFooter className="flex justify-between">
-                                    <Button type="button" variant="outline" onClick={() => setAppState({ step: 'welcome' })}>
-                                        <ArrowLeft className="mr-2" /> Back
-                                    </Button>
-                                    <Button type="submit" disabled={!selectedTemplateId}>
-                                        Next <ArrowRight className="ml-2" />
-                                    </Button>
-                                </CardFooter>
-                            </form>
-                        </Form>
-                    </Card>
-                );
-            case 'form':
-                return (
-                    <Card className="shadow-lg max-w-3xl w-full">
-                        <Form {...resumeForm}>
-                            <form onSubmit={(e) => { e.preventDefault(); handleNextStep() }}>
-                                <CardHeader>
-                                    <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4'>
-                                        <div className="space-y-1.5">
-                                            <CardTitle className="text-2xl">Step 2: Build Your Resume</CardTitle>
-                                            <CardDescription>You are on the <span className="font-semibold text-primary">{formSteps[appState.currentFormStep]}</span> section.</CardDescription>
-                                        </div>
-                                        <div className="flex items-center justify-center sm:justify-end gap-2">
-                                            <Button type="button" variant="secondary" size="sm" onClick={() => setAppState({ step: 'template' })}>Change Template</Button>
-                                        </div>
-                                    </div>
-                                </CardHeader>
-                                <CardContent>
-                                    {appState.currentFormStep === 0 && ( // Contact Info
-                                        <div className="space-y-4">
-                                            <FormField control={resumeForm.control} name="fullName" render={({ field }) => (<FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="John Doe" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                            <div className="grid md:grid-cols-2 gap-4">
-                                                <FormField control={resumeForm.control} name="email" render={({ field }) => (<FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="john.doe@email.com" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                <FormField control={resumeForm.control} name="phone" render={({ field }) => (<FormItem><FormLabel>Phone</FormLabel><FormControl><Input placeholder="(123) 456-7890" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                            </div>
-                                            <div className="grid md:grid-cols-3 gap-4">
-                                                <FormField control={resumeForm.control} name="website" render={({ field }) => (<FormItem><FormLabel>Website (Optional)</FormLabel><FormControl><Input placeholder="https://your-portfolio.com" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                <FormField control={resumeForm.control} name="linkedin" render={({ field }) => (<FormItem><FormLabel>LinkedIn (Optional)</FormLabel><FormControl><Input placeholder="https://linkedin.com/in/yourprofile" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                <FormField control={resumeForm.control} name="github" render={({ field }) => (<FormItem><FormLabel>GitHub (Optional)</FormLabel><FormControl><Input placeholder="https://github.com/yourprofile" {...field} value={field.value ?? ''} /></FormControl></FormItem>)} />
-                                            </div>
-                                        </div>
-                                    )}
-                                    {appState.currentFormStep === 1 && (<FormField control={resumeForm.control} name="summary" render={({ field }) => (<FormItem><FormLabel>Professional Summary</FormLabel><FormControl><Textarea placeholder="A brief summary of your skills and experience..." className="h-40" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />)}
-                                    {appState.currentFormStep === 2 && ( // Experience
-                                        <div className="space-y-6">
-                                            {experienceFields.map((field, index) => (
-                                                <div key={field.id} className="space-y-4 p-4 border rounded-md relative">
-                                                    <div className="grid md:grid-cols-2 gap-4">
-                                                        <FormField control={resumeForm.control} name={`experience.${index}.title`} render={({ field }) => (<FormItem><FormLabel>Job Title</FormLabel><FormControl><Input {...field} placeholder="Software Engineer" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                        <FormField control={resumeForm.control} name={`experience.${index}.company`} render={({ field }) => (<FormItem><FormLabel>Company</FormLabel><FormControl><Input {...field} placeholder="Tech Corp" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                    </div>
-                                                    <div className="grid md:grid-cols-3 gap-4">
-                                                        <FormField control={resumeForm.control} name={`experience.${index}.location`} render={({ field }) => (<FormItem><FormLabel>Location</FormLabel><FormControl><Input {...field} placeholder="San Francisco, CA" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                        <FormField control={resumeForm.control} name={`experience.${index}.startDate`} render={({ field }) => (<FormItem><FormLabel>Start Date</FormLabel><FormControl><Input {...field} placeholder="May 2020" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                        <FormField control={resumeForm.control} name={`experience.${index}.endDate`} render={({ field }) => (<FormItem><FormLabel>End Date</FormLabel><FormControl><Input {...field} placeholder="Present" value={field.value ?? ''} /></FormControl></FormItem>)} />
-                                                    </div>
-                                                    <Controller
-                                                        control={resumeForm.control}
-                                                        name={`experience.${index}.responsibilities`}
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormLabel>Responsibilities & Achievements</FormLabel>
-                                                                <FormControl>
-                                                                    <Textarea
-                                                                        {...field}
-                                                                        value={Array.isArray(field.value) ? field.value.join('\n') : ''}
-                                                                        onChange={e => field.onChange(e.target.value.split('\n'))}
-                                                                        placeholder={"- Developed feature X, resulting in a 20% increase in user engagement.\n- Led a team of 5 engineers to deliver project Y on time."}
-                                                                        className="h-32"
-                                                                    />
-                                                                </FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
-                                                    <Button type="button" variant="destructive" size="sm" onClick={() => removeExperience(index)} className="absolute -top-3 -right-3 h-7 w-7 rounded-full p-0"><Trash2 className="h-4 w-4" /></Button>
-                                                </div>
-                                            ))}
-                                            <Button type="button" variant="outline" onClick={() => appendExperience({ company: '', location: '', title: '', startDate: '', endDate: '', responsibilities: [''] })}>
-                                                <PlusCircle className="mr-2 h-4 w-4" /> Add Experience
-                                            </Button>
-                                        </div>
-                                    )}
-                                    {appState.currentFormStep === 3 && ( // Projects
-                                        <div className="space-y-6">
-                                            {projectFields.map((field, index) => (
-                                                <div key={field.id} className="space-y-4 p-4 border rounded-md relative">
-                                                    <FormField control={resumeForm.control} name={`projects.${index}.name`} render={({ field }) => (<FormItem><FormLabel>Project Name</FormLabel><FormControl><Input {...field} placeholder="Resume Builder" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                    <FormField control={resumeForm.control} name={`projects.${index}.technologies`} render={({ field }) => (<FormItem><FormLabel>Skills [Technologies] Used</FormLabel><FormControl><Input {...field} placeholder="Next.js, Tailwind CSS, Genkit" value={field.value ?? ''} /></FormControl><FormDescription>Comma-separated list of technologies.</FormDescription><FormMessage /></FormItem>)} />
-                                                    <FormField control={resumeForm.control} name={`projects.${index}.description`} render={({ field }) => (<FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} placeholder="An AI-powered application to build and enhance resumes..." className="h-24" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                    <FormField control={resumeForm.control} name={`projects.${index}.url`} render={({ field }) => (<FormItem><FormLabel>Project URL (Optional)</FormLabel><FormControl><Input {...field} placeholder="https://github.com/user/project" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                    <Button type="button" variant="destructive" size="sm" onClick={() => removeProject(index)} className="absolute -top-3 -right-3 h-7 w-7 rounded-full p-0"><Trash2 className="h-4 w-4" /></Button>
-                                                </div>
-                                            ))}
-                                            <Button type="button" variant="outline" onClick={() => appendProject({ name: '', description: '', technologies: '', url: '' })}>
-                                                <PlusCircle className="mr-2 h-4 w-4" /> Add Project
-                                            </Button>
-                                        </div>
-                                    )}
-                                    {appState.currentFormStep === 4 && ( // Education
-                                        <div className="space-y-6">
-                                            {educationFields.map((field, index) => (
-                                                <div key={field.id} className="space-y-4 p-4 border rounded-md relative">
-                                                    <div className="grid md:grid-cols-2 gap-4">
-                                                        <FormField control={resumeForm.control} name={`education.${index}.institution`} render={({ field }) => (<FormItem><FormLabel>Institution</FormLabel><FormControl><Input {...field} placeholder="University of Example" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                        <FormField control={resumeForm.control} name={`education.${index}.degree`} render={({ field }) => (<FormItem><FormLabel>Degree / Certificate</FormLabel><FormControl><Input {...field} placeholder="B.S. in Computer Science" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                    </div>
-                                                    <div className="grid md:grid-cols-2 gap-4">
-                                                        <FormField control={resumeForm.control} name={`education.${index}.location`} render={({ field }) => (<FormItem><FormLabel>Location</FormLabel><FormControl><Input {...field} placeholder="City, State" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                        <FormField control={resumeForm.control} name={`education.${index}.graduationDate`} render={({ field }) => (<FormItem><FormLabel>Graduation Date</FormLabel><FormControl><Input {...field} placeholder="May 2018" value={field.value ?? ''} /></FormControl></FormItem>)} />
-                                                    </div>
-                                                    <Button type="button" variant="destructive" size="sm" onClick={() => removeEducation(index)} className="absolute -top-3 -right-3 h-7 w-7 rounded-full p-0"><Trash2 className="h-4 w-4" /></Button>
-                                                </div>
-                                            ))}
-                                            <Button type="button" variant="outline" onClick={() => appendEducation({ institution: '', location: '', degree: '', graduationDate: '' })}>
-                                                <PlusCircle className="mr-2 h-4 w-4" /> Add Education
-                                            </Button>
-                                        </div>
-                                    )}
-                                    {appState.currentFormStep === 5 && ( // Certifications
-                                        <div className="space-y-6">
-                                            {certificationFields.map((field, index) => (
-                                                <div key={field.id} className="space-y-4 p-4 border rounded-md relative">
-                                                    <FormField control={resumeForm.control} name={`certifications.${index}.name`} render={({ field }) => (<FormItem><FormLabel>Certification Name</FormLabel><FormControl><Input {...field} placeholder="Professional Scrum Developer (PSD 1)" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                    <div className="grid md:grid-cols-2 gap-4">
-                                                        <FormField control={resumeForm.control} name={`certifications.${index}.issuer`} render={({ field }) => (<FormItem><FormLabel>Issuing Body (Optional)</FormLabel><FormControl><Input {...field} placeholder="Scrum.org" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                        <FormField control={resumeForm.control} name={`certifications.${index}.date`} render={({ field }) => (<FormItem><FormLabel>Date Received (Optional)</FormLabel><FormControl><Input {...field} placeholder="2023" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                    </div>
-                                                    <FormField control={resumeForm.control} name={`certifications.${index}.url`} render={({ field }) => (<FormItem><FormLabel>Verification URL (Optional)</FormLabel><FormControl><Input {...field} placeholder="https://verify-cert.com/123" value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
-                                                    <Button type="button" variant="destructive" size="sm" onClick={() => removeCertification(index)} className="absolute -top-3 -right-3 h-7 w-7 rounded-full p-0"><Trash2 className="h-4 w-4" /></Button>
-                                                </div>
-                                            ))}
-                                            <Button type="button" variant="outline" onClick={() => appendCertification({ name: '', issuer: '', date: '', url: '' })}>
-                                                <PlusCircle className="mr-2 h-4 w-4" /> Add Certification
-                                            </Button>
-                                        </div>
-                                    )}
-                                    {appState.currentFormStep === 6 && (<FormField control={resumeForm.control} name="skills" render={({ field }) => (<FormItem><FormLabel>Skills</FormLabel><FormControl><Textarea placeholder="Languages: TypeScript, Python; Frameworks: React, Next.js, FastAPI; Databases: PostgreSQL, Firestore" className="h-32" {...field} value={field.value ?? ''} /></FormControl><FormDescription>Categorize your skills for better readability, separating categories with semicolons.</FormDescription><FormMessage /></FormItem>)} />)}
-                                </CardContent>
-                                <CardFooter className="flex justify-between">
-                                    <Button type="button" variant="outline" onClick={handlePrevStep}><ArrowLeft className="mr-2" /> Back</Button>
-                                    <div className="flex items-center gap-2">
-                                        {appState.currentFormStep < formSteps.length - 1 && resumeForm.formState.isValid && (
-                                            <Button type="button" variant="secondary" onClick={() => handleGenerateResume(resumeForm.getValues())}>
-                                                Finish
-                                            </Button>
-                                        )}
-                                        <Button type="submit">
-                                            {appState.currentFormStep < formSteps.length - 1 ? 'Next' : 'Generate Resume'} <ArrowRight className="ml-2" />
-                                        </Button>
-                                    </div>
-                                </CardFooter>
-                            </form>
-                        </Form>
-                    </Card>
-                );
-            case 'result':
-                return (
-                    <Card className="shadow-lg w-full max-w-6xl">
-                        <CardHeader>
-                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-                                <div className="space-y-1.5">
-                                    <CardTitle className="text-2xl">Your Resume is Ready!</CardTitle>
-                                    <CardDescription>Review, enhance, edit, and download your resume.</CardDescription>
-                                </div>
-                                <div className="flex flex-wrap items-center justify-end gap-2">
-                                    <Button variant="outline" onClick={() => setAppState({ step: 'form', currentFormStep: formSteps.length - 1 })}>
-                                        <ArrowLeft className="mr-2" /> Back to Edit
-                                    </Button>
-                                    <Button variant="outline" onClick={() => setAppState({ step: 'welcome' })}>
-                                        <Home className="mr-2" /> Start New Resume
-                                    </Button>
-                                </div>
-                            </div>
-                        </CardHeader>
-                        <CardContent className="pt-2">
-                            <Tabs defaultValue="preview" className="w-full">
-                                <TabsList className="grid w-full grid-cols-2">
-                                    <TabsTrigger value="preview"><Eye className="mr-2" />Resume Preview</TabsTrigger>
-                                    <TabsTrigger value="enhance"><Wand2 className="mr-2" />Enhance with AI</TabsTrigger>
-                                </TabsList>
-                                <TabsContent value="preview" className="mt-4">
-                                    <div className="flex flex-col gap-4">
-                                        <div className="flex justify-between items-center p-2 border rounded-md">
-                                            <div className="flex items-center gap-2">
-                                                <h3 className="text-lg font-semibold">
-                                                    {enhancedResumeHtml ? "Enhanced Version" : "Original Version"}
-                                                </h3>
-                                                {enhancedResumeHtml && (
-                                                    <Button variant="outline" size="sm" onClick={handleRevert}><History className="mr-2" /> Revert to Original</Button>
-                                                )}
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <Button variant="outline" size="sm" onClick={() => {
-                                                    if (isEditingHtml) {
-                                                        handleSaveHtml();
-                                                    }
-                                                    setIsEditingHtml(!isEditingHtml);
-                                                }}>
-                                                    {isEditingHtml ? <><Save className="mr-2" /> Save & Preview</> : <><Pencil className="mr-2" /> Edit HTML</>}
-                                                </Button>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex-grow mt-2 min-h-0">
-                                            {isEditingHtml ? (
-                                                <Textarea
-                                                    value={editedHtml}
-                                                    onChange={(e) => setEditedHtml(e.target.value)}
-                                                    className="h-[70vh] w-full resize-none font-mono text-xs"
-                                                />
-                                            ) : (
-                                                <ScrollArea className="h-[70vh] w-full rounded-md border bg-muted">
-                                                    <div className="resume-preview-container">
-                                                        <div className="resume-preview" dangerouslySetInnerHTML={{ __html: editedHtml || '' }} />
-                                                    </div>
-                                                </ScrollArea>
-                                            )}
-                                        </div>
-                                    </div>
-                                </TabsContent>
-                                <TabsContent value="enhance" className="mt-4">
-                                    <div className="flex flex-col gap-4 p-4 border rounded-lg">
-                                        <h3 className="text-lg font-semibold">Enhance with AI</h3>
-                                        <p className="text-sm text-muted-foreground">Paste a job description and your Gemini API key below to get AI-powered suggestions tailored for the role.</p>
-
-                                        <Form {...jdForm}>
-                                            <form onSubmit={jdForm.handleSubmit(handleEnhanceSubmit)} className="space-y-4">
-                                                <FormField
-                                                    control={jdForm.control}
-                                                    name="jobDescriptionText"
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>Job Description</FormLabel>
-                                                            <FormControl>
-                                                                <Textarea placeholder="Paste job description here..." className="h-48" {...field} />
-                                                            </FormControl>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
-                                                <div className="grid md:grid-cols-2 gap-4">
-                                                    <FormField
-                                                        control={jdForm.control}
-                                                        name="apiKey"
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormLabel>Gemini API Key</FormLabel>
-                                                                <FormControl>
-                                                                    <Input type="password" placeholder="Enter your Gemini API key" {...field} />
-                                                                </FormControl>
-                                                                <FormDescription>Your key is not stored.</FormDescription>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
-                                                    <FormField
-                                                        control={jdForm.control}
-                                                        name="model"
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormLabel>AI Model</FormLabel>
-                                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                                    <FormControl>
-                                                                        <SelectTrigger>
-                                                                            <SelectValue placeholder="Select a model" />
-                                                                        </SelectTrigger>
-                                                                    </FormControl>
-                                                                    <SelectContent>
-                                                                        {availableModels.map(model => (
-                                                                            <SelectItem key={model.id} value={model.id}>{model.name}</SelectItem>
-                                                                        ))}
-                                                                    </SelectContent>
-                                                                </Select>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
-                                                </div>
-                                                {appState.analysis && (
-                                                    <Alert>
-                                                        <Wand2 className="h-4 w-4" />
-                                                        <AlertTitle>AI Suggestions Applied</AlertTitle>
-                                                        <AlertDescription>The current version includes enhancements based on the job description. You can revert to the original if you wish.</AlertDescription>
-                                                    </Alert>
-                                                )}
-                                                <Button type="submit" className="w-full" disabled={isLoading}>
-                                                    <Wand2 className="mr-2" /> Enhance Resume
-                                                </Button>
-                                            </form>
-                                        </Form>
-                                        {error && (
-                                            <Alert variant="destructive">
-                                                <FileWarning className="h-4 w-4" />
-                                                <AlertTitle>Error</AlertTitle>
-                                                <AlertDescription>{error}</AlertDescription>
-                                            </Alert>
-                                        )}
-                                    </div>
-                                </TabsContent>
-                            </Tabs>
-                        </CardContent>
-                    </Card>
-                );
-            default:
-                return null;
-        }
+        return stepComponentMap[appState.step] || null;
     }
 
 
