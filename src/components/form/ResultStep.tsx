@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { JobDescriptionValues } from '@/lib/schema';
 import availableModels from '@/lib/ai/gemini_models.json';
+import PagedPreview from '../PagedPreview';
 
 interface ResultStepProps {
   jdForm: UseFormReturn<JobDescriptionValues>;
@@ -29,6 +30,7 @@ interface ResultStepProps {
   onSaveHtml: () => void;
   onEditHtmlChange: (value: string) => void;
   onSubmitEnhance: (data: JobDescriptionValues) => void;
+  setPrintReadyHtml: (html: string) => void;
 }
 
 export default function ResultStep({
@@ -45,7 +47,8 @@ export default function ResultStep({
   onEditHtml,
   onSaveHtml,
   onEditHtmlChange,
-  onSubmitEnhance
+  onSubmitEnhance,
+  setPrintReadyHtml
 }: ResultStepProps) {
   return (
     <Card className="shadow-lg w-full max-w-6xl">
@@ -99,9 +102,10 @@ export default function ResultStep({
                   />
                 ) : (
                   <ScrollArea className="h-[70vh] w-full rounded-md border bg-muted">
-                    <div className="resume-preview-container">
-                      <div className="resume-preview" dangerouslySetInnerHTML={{ __html: editedHtml }} />
-                    </div>
+                    {/* <div className="resume-preview-container"> */}
+                      {/* <div className="resume-preview" dangerouslySetInnerHTML={{ __html: editedHtml }} /> */}
+                      <PagedPreview contentHtml={editedHtml} setPrintReadyHtml={setPrintReadyHtml}/>
+                    {/* </div> */}
                   </ScrollArea>
                 )}
               </div>
