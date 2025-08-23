@@ -10,6 +10,5 @@ export function getBaseUrl(): string {
   if (typeof window !== 'undefined') {
     return window.location.origin;
   }
-  // Fallback for server-side rendering or non-browser environments
-  return 'http://localhost:9002'; // Adjust as necessary for your environment
+  return 'http://localhost:9002'; 
 }
