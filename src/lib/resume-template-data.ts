@@ -10,9 +10,9 @@ import { classicTemplate, modernTemplate, creativeTemplate } from '@/templates';
  * Defines the structure for a resume template.
  */
 export interface ResumeTemplate {
-    id: 'classic' | 'modern' | 'creative';
-    name: string;
-    html: Promise<string> ;
+  id: 'classic' | 'modern' | 'creative';
+  name: string;
+  html: Promise<string>;
 }
 
 /**
@@ -21,10 +21,24 @@ export interface ResumeTemplate {
  * for its thumbnail preview.
  */
 export const templates: ResumeTemplate[] = [
-    { id: 'classic', name: 'Classic', html: classicTemplate },
-    { id: 'modern', name: 'Modern', html: modernTemplate },
-    { id: 'creative', name: 'Creative', html: creativeTemplate },
+  { id: 'classic', name: 'Classic', html: classicTemplate },
+  { id: 'modern', name: 'Modern', html: modernTemplate },
+  { id: 'creative', name: 'Creative', html: creativeTemplate },
 ];
+
+/**
+ * Default values for the resume form. This ensures that all fields are initialized
+ * properly, preventing issues with uncontrolled components in React.
+ */
+export const resumeFormDefaultValues: ResumeFormValues = {
+  fullName: '', email: '', phone: '', website: '', linkedin: '', github: '', summary: '',
+  experience: [{ company: '', location: '', title: '', startDate: '', endDate: '', responsibilities: [''] }],
+  projects: [{ name: '', description: '', technologies: '', url: '' }],
+  education: [{ institution: '', location: '', degree: '', graduationDate: '' }],
+  certifications: [{ name: '', issuer: '', date: '', url: '' }],
+  skills: '',
+  template: 'modern',
+};
 
 /**
  * Pre-filled sample data for the resume form. Useful for testing and demonstrations.
