@@ -45,7 +45,10 @@ export const resumeFormSchema = z.object({
         date: z.string().optional().or(z.literal('')),
         url: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
     })).optional(),
-    template: z.enum(['classic', 'modern', 'creative']),
+    template: z.enum([
+        'classic', 'modern', 'creative', 'minimalist', 'professional', 'executive', 
+        'technical', 'two-column', 'elegant', 'compact', 'modern-executive', 'academic', 'sales'
+    ]),
 });
 
 /**

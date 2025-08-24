@@ -125,7 +125,7 @@ export function renderSimpleTemplate(template: string, data: any, depth = 0, max
 
     // Handle special skills string format
     if (data.skills && typeof data.skills === 'string') {
-        const skillsHtml = data.skills.split(';').map(category => {
+        const skillsHtml = data.skills.split(';').map((category: string) => {
             const parts = category.trim().split(':');
             if (parts.length < 2) {
                 return `<p class="skills-item">${category.trim()}</p>`;

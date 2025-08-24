@@ -8,7 +8,7 @@
         /* A4 Standard Print Styles */
         @page {
             size: A4 portrait;
-            margin: 15mm 20mm 15mm 20mm; /* A4 standard margins */
+            margin: 15mm 20mm 15mm 20mm;
         }
         
         @media print {
@@ -17,6 +17,13 @@
                 line-height: 1.2;
                 color: #000 !important;
                 -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                margin: 0;
+            }
+            .resume-container {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
             }
             .no-print { display: none !important; }
             .page-break { page-break-before: always; }
@@ -37,17 +44,20 @@
             color: #1f2937;
             background-color: #f9fafb;
             line-height: 1.4;
-            font-size: 12px; /* Optimized for A4 */
+            font-size: 11pt;
+            margin: 0;
+            padding: 20px;
         }
         
         .resume-container {
-            width: 210mm; /* A4 width */
+            width: 210mm;
             max-width: 210mm;
             margin: 0 auto;
             background: white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            min-height: 297mm; /* A4 height */
-            padding: 1.5rem 2rem;
+            min-height: 297mm;
+            padding: 20mm 25mm;
+            position: relative;
         }
         
         /* Header styles - A4 optimized */
