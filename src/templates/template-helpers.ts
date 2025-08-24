@@ -3,7 +3,7 @@
  * template processing and data transformation.
  */
 
-import type { ResumeFormValues } from './schema';
+import type { ResumeFormValues } from '../lib/schema';
 
 /**
  * A simple, custom Handlebars-like template renderer. It processes a template

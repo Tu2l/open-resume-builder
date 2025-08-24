@@ -7,7 +7,8 @@ This document outlines the technical architecture and design of the Resume AI ap
 - **Client-Centric**: The application performs all major data processing and AI interactions on the client-side. This minimizes server load, reduces complexity, and keeps user data (including API keys) within the browser.
 - **Component-Based UI**: Built with React and `shadcn/ui`, promoting a modular, reusable, and maintainable user interface.
 - **Type-Safe**: Leverages TypeScript and Zod for robust data validation and type safety, from form inputs to API interactions.
-- **Static Data & Templates**: Core configuration data (like AI models) and resume templates are loaded from static files (`/src/lib` and `/public`), making them easy to update without code changes.
+- **Dynamic Configuration**: Templates and thumbnails are loaded dynamically from JSON configuration and asset files, enabling unlimited template expansion without code changes.
+- **Async Architecture**: All template loading operations use async/await patterns for optimal performance and user experience.
 
 ## 2. Architecture Overview
 
@@ -25,11 +26,14 @@ This document outlines the technical architecture and design of the Resume AI ap
 
 - **Schema (`src/lib/schema.ts`)**: Zod schemas define the data structure for the resume (`resumeFormSchema`) and the AI enhancement form (`jobDescriptionSchema`). These schemas are the single source of truth for data validation.
 - **Static Data**:
-  - `src/lib/models.json`: A list of available Gemini models for the AI enhancement feature.
-  - `src/lib/data.ts`: Contains sample data (`testData`) for demonstrating the form.
-- **Resume Templates**:
-  - HTML templates are stored in `/public/templates/html/`.
-  - They are fetched on the client and processed by a lightweight, custom Handlebars-like renderer in `src/lib/template-helpers.ts`.
+  - `src/lib/ai/gemini_models.json`: A list of available Gemini models for the AI enhancement feature.
+  - Sample data available for form demonstration purposes.
+- **Dynamic Template System**:
+  - **Configuration**: `public/templates/templates.json` - Central configuration with template metadata
+  - **HTML Templates**: `public/templates/html/*.html` - Template implementations
+  - **Thumbnails**: `public/templates/thumbnails/*.svg` - Visual previews
+  - **Loading**: Templates are loaded dynamically using async functions from `src/templates/index.ts`
+  - **Processing**: Templates are processed by Handlebars-compatible renderer in `src/lib/template-helpers.ts`
 
 ### AI Integration (Client-Side)
 
@@ -41,7 +45,7 @@ This document outlines the technical architecture and design of the Resume AI ap
 ## 3. Application Flow
 
 1.  **Welcome**: The user starts at a welcome screen and can either begin a new resume or import existing data from a JSON file.
-2.  **Template Selection**: The user chooses a visual template for their resume.
+2.  **Template Selection**: The user chooses from 13 visual templates organized by category (traditional, modern, creative, professional, specialized). Templates are loaded dynamically with real-time thumbnail previews.
 3.  **Form Filling**: The user progresses through a multi-step form, entering their contact information, summary, experience, etc.
 4.  **Initial Generation**: The user's data is rendered into the selected HTML template to create an initial resume.
 5.  **Result Page**: The user can preview the generated resume. From here, they can:
@@ -49,11 +53,57 @@ This document outlines the technical architecture and design of the Resume AI ap
     - **Edit HTML**: Manually edit the resume's HTML for fine-grained control.
     - **Download/Print**: Export the resume data as JSON or download the final HTML.
 
-## 4. Key Files and Directories
+## 8. Template System
+
+The application features a **fully dynamic template system** with zero hardcoded components. See [`TEMPLATE_SYSTEM.md`](./TEMPLATE_SYSTEM.md) for complete documentation.
+
+Key features:
+- **13 templates** organized in 5 categories with visual thumbnails
+- **JSON configuration** for all template metadata  
+- **Automated management** with 4 shell scripts for complete lifecycle
+- **Zero code changes** required for adding new templates
+- **Dynamic loading** of both templates and thumbnails at runtime
+
+Quick example:
+```bash
+./scripts/add-template.sh luxury "Luxury Executive" "Premium design" professional "Luxury,Premium"
+# ✅ Template immediately available in the application!
+```
+
+This enables unlimited template expansion without requiring code changes or deployment.
+
+## 5. Technical Implementation
+
+The application uses:
+
+- **Next.js 14+** with App Router architecture
+- **TypeScript** for type safety and better development experience
+- **Tailwind CSS** with shadcn/ui components for consistent, responsive design
+- **React Hook Form** with Zod validation for form management
+- **Google Gemini API** for AI-powered resume enhancement
+- **Dynamic Template Loading** via async functions and JSON configuration
+- **SVG Thumbnails** for real-time template previews
+- **Client-side Architecture** ensuring user data privacy and security
+
+### Key Components
+
+- **AppState.tsx**: Global state management for resume data and template handling
+- **FormStepsContainer.tsx**: Multi-step form navigation and data management
+- **TemplateSelectionStep.tsx**: Template browsing with category organization and async loading
+- **TemplateThumbnail.tsx**: Dynamic thumbnail rendering with loading states
+- **ResultStep.tsx**: Final resume preview with AI enhancement and editing capabilities
+- **Templates Index**: Async template loading functions organized by category
+- **Management Scripts**: Automation tools for template lifecycle management
+
+## 6. Key Files and Directories
 
 - **`src/app/page.tsx`**: The core of the application logic and UI.
 - **`src/app/globals.css`**: Global styles and Tailwind CSS configuration.
 - **`src/components/ui/`**: Reusable `shadcn/ui` components.
-- **`src/lib/`**: Contains helper functions (`utils.ts`), data schemas (`schema.ts`), static data (`data.ts`, `models.json`), and template helpers (`template-helpers.ts`).
-- **`public/templates/html/`**: The raw HTML files for the resume templates.
+- **`src/components/form/`**: Multi-step form components including TemplateSelectionStep.tsx
+- **`src/components/TemplateThumbnail.tsx`**: Dynamic thumbnail rendering component
+- **`src/lib/`**: Contains helper functions (`utils.ts`), data schemas (`schema.ts`), template helpers (`template-helpers.ts`), and AppState management
+- **`src/templates/index.ts`**: Async template loading functions organized by category
+- **`public/templates/`**: Complete template system with JSON config, HTML templates, and SVG thumbnails
+- **`scripts/`**: Template management automation scripts
 - **`package.json`**: Defines project dependencies and scripts.

@@ -1,124 +1,61 @@
 import { getBaseUrl } from "@/lib/utils";
 
-// Define template types
-type TemplateName = 
-  | 'classic' 
-  | 'modern' 
-  | 'creative' 
-  | 'minimalist'
-  | 'professional'
-  | 'executive'
-  | 'technical'
-  | 'two-column'
-  | 'elegant'
-  | 'compact'
-  | 'modern-executive'
-  | 'academic'
-  | 'sales';
-
 // Template metadata for display in UI
 export interface TemplateInfo {
-  id: TemplateName;
+  id: string;
   name: string;
   description: string;
   category: 'traditional' | 'modern' | 'creative' | 'professional' | 'specialized';
   features: string[];
 }
 
-// Available templates with metadata
-export const availableTemplates: TemplateInfo[] = [
-  {
-    id: 'classic',
-    name: 'Classic',
-    description: 'Traditional resume format with clean typography',
-    category: 'traditional',
-    features: ['Clean layout', 'Professional typography', 'ATS-friendly']
-  },
-  {
-    id: 'modern',
-    name: 'Modern',
-    description: 'Contemporary design with subtle styling',
-    category: 'modern',
-    features: ['Modern design', 'Color accents', 'Professional']
-  },
-  {
-    id: 'creative',
-    name: 'Creative',
-    description: 'Artistic template for creative professionals',
-    category: 'creative',
-    features: ['Colorful design', 'Creative elements', 'Portfolio-friendly']
-  },
-  {
-    id: 'minimalist',
-    name: 'Minimalist',
-    description: 'Clean and simple design with maximum readability',
-    category: 'modern',
-    features: ['Minimal design', 'Excellent readability', 'Clean lines']
-  },
-  {
-    id: 'professional',
-    name: 'Professional',
-    description: 'Corporate-style template with gradient header',
-    category: 'professional',
-    features: ['Corporate style', 'Gradient header', 'Professional colors']
-  },
-  {
-    id: 'executive',
-    name: 'Executive',
-    description: 'Sophisticated template for senior-level positions',
-    category: 'professional',
-    features: ['Executive styling', 'Elegant typography', 'Premium look']
-  },
-  {
-    id: 'technical',
-    name: 'Technical',
-    description: 'Developer-focused template with code aesthetics',
-    category: 'specialized',
-    features: ['Tech-focused', 'Code-style fonts', 'Developer-friendly']
-  },
-  {
-    id: 'two-column',
-    name: 'Two Column',
-    description: 'Space-efficient layout with sidebar',
-    category: 'modern',
-    features: ['Two-column layout', 'Space efficient', 'Sidebar design']
-  },
-  {
-    id: 'elegant',
-    name: 'Elegant',
-    description: 'Sophisticated design with decorative elements',
-    category: 'creative',
-    features: ['Elegant styling', 'Decorative elements', 'Artistic flair']
-  },
-  {
-    id: 'compact',
-    name: 'Compact',
-    description: 'Optimized for maximum content in minimal space',
-    category: 'specialized',
-    features: ['Space-optimized', 'Compact layout', 'Content-heavy']
-  },
-  {
-    id: 'modern-executive',
-    name: 'Modern Executive',
-    description: 'Contemporary executive template with gradient design',
-    category: 'professional',
-    features: ['Executive level', 'Modern gradient', 'Leadership focus']
-  },
-  {
-    id: 'academic',
-    name: 'Academic',
-    description: 'Research-focused template for academics',
-    category: 'specialized',
-    features: ['Academic format', 'Publication focus', 'Research-oriented']
-  },
-  {
-    id: 'sales',
-    name: 'Sales Professional',
-    description: 'Performance-focused template for sales roles',
-    category: 'specialized',
-    features: ['Metrics-focused', 'Achievement highlights', 'Sales-optimized']
+// Template configuration interface
+interface TemplateConfig {
+  templates: TemplateInfo[];
+}
+
+// Cache for loaded template configuration
+let templateConfigCache: TemplateConfig | null = null;
+
+/**
+ * Load template configuration from JSON file
+ */
+const loadTemplateConfig = async (): Promise<TemplateConfig> => {
+  if (templateConfigCache) {
+    return templateConfigCache;
   }
-];
+
+  try {
+    const url = `${getBaseUrl()}/templates/templates.json`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to load template config: ${response.statusText}`);
+    }
+
+    const config = await response.json() as TemplateConfig;
+    templateConfigCache = config;
+    return config;
+  } catch (error) {
+    console.error('Error loading template configuration:', error);
+    // Fallback to empty configuration
+    return { templates: [] };
+  }
+};
+
+/**
+ * Get all available templates
+ */
+export const getAvailableTemplates = async (): Promise<TemplateInfo[]> => {
+  const config = await loadTemplateConfig();
+  return config.templates;
+};
+
+// For backward compatibility, export availableTemplates as a promise
+export const availableTemplates: Promise<TemplateInfo[]> = getAvailableTemplates();
 
 // Template cache to store loaded templates
 const templateCache: Record<string, string> = {};
@@ -128,7 +65,7 @@ const templateCache: Record<string, string> = {};
  * @param templateName The name of the template to load
  * @returns The template HTML string
  */
-export const loadTemplate = async (templateName: TemplateName): Promise<string> => {
+export const loadTemplate = async (templateName: string): Promise<string> => {
   if (templateCache[templateName]) {
     return templateCache[templateName];
   }
@@ -153,28 +90,44 @@ export const loadTemplate = async (templateName: TemplateName): Promise<string> 
 /**
  * Get template info by ID
  */
-export const getTemplateInfo = (templateId: TemplateName): TemplateInfo | undefined => {
-  return availableTemplates.find(template => template.id === templateId);
+export const getTemplateInfo = async (templateId: string): Promise<TemplateInfo | undefined> => {
+  const templates = await getAvailableTemplates();
+  return templates.find(template => template.id === templateId);
 };
 
 /**
  * Get templates by category
  */
-export const getTemplatesByCategory = (category: TemplateInfo['category']): TemplateInfo[] => {
-  return availableTemplates.filter(template => template.category === category);
+export const getTemplatesByCategory = async (category: TemplateInfo['category']): Promise<TemplateInfo[]> => {
+  const templates = await getAvailableTemplates();
+  return templates.filter(template => template.category === category);
 };
 
-// Individual template exports
-export const classicTemplate = loadTemplate('classic');
-export const modernTemplate = loadTemplate('modern');
-export const creativeTemplate = loadTemplate('creative');
-export const minimalistTemplate = loadTemplate('minimalist');
-export const professionalTemplate = loadTemplate('professional');
-export const executiveTemplate = loadTemplate('executive');
-export const technicalTemplate = loadTemplate('technical');
-export const twoColumnTemplate = loadTemplate('two-column');
-export const elegantTemplate = loadTemplate('elegant');
-export const compactTemplate = loadTemplate('compact');
-export const modernExecutiveTemplate = loadTemplate('modern-executive');
-export const academicTemplate = loadTemplate('academic');
-export const salesTemplate = loadTemplate('sales');
+/**
+ * Get all template IDs
+ */
+export const getTemplateIds = async (): Promise<string[]> => {
+  const templates = await getAvailableTemplates();
+  return templates.map(template => template.id);
+};
+
+/**
+ * Get a specific template by ID - fully dynamic loading
+ */
+export const getTemplateById = async (templateId: string): Promise<string> => {
+  // Verify the template exists in configuration
+  const templateExists = await templateExistsInConfig(templateId);
+  if (!templateExists) {
+    throw new Error(`Template '${templateId}' not found in configuration`);
+  }
+  
+  return loadTemplate(templateId);
+};
+
+/**
+ * Check if template exists in configuration
+ */
+const templateExistsInConfig = async (templateId: string): Promise<boolean> => {
+  const templates = await getAvailableTemplates();
+  return templates.some(template => template.id === templateId);
+};

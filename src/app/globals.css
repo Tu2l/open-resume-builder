@@ -67,11 +67,18 @@ body {
   }
   .resume-preview-container {
     @apply p-4 bg-background;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
   }
   .resume-preview {
       color: hsl(var(--foreground));
-      width: 8.5in;
-      min-height: 11in;
+      width: 210mm; /* A4 width */
+      min-height: 297mm; /* A4 height */
       margin: 0 auto;
+      background: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
   }
 }

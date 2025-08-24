@@ -8,8 +8,9 @@ import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
 import { ResumeFormValues } from '@/lib/schema';
-import { availableTemplates, getTemplatesByCategory, TemplateInfo } from '@/templates';
-import { TemplateThumbnail } from '@/components/resume-templates';
+import { getAvailableTemplates, getTemplatesByCategory, TemplateInfo } from '@/templates';
+import  TemplateThumbnail  from '@/components/TemplateThumbnail';
+import { useEffect, useState } from 'react';
 
 interface TemplateSelectionStepProps {
   form: UseFormReturn<ResumeFormValues>;
@@ -19,15 +20,42 @@ interface TemplateSelectionStepProps {
 
 export default function TemplateSelectionStep({ form, onBack, onNext }: TemplateSelectionStepProps) {
   const selectedTemplateId = form.watch('template');
-  
-  // Group templates by category
-  const templatesByCategory = {
-    traditional: getTemplatesByCategory('traditional'),
-    modern: getTemplatesByCategory('modern'),
-    professional: getTemplatesByCategory('professional'),
-    creative: getTemplatesByCategory('creative'),
-    specialized: getTemplatesByCategory('specialized'),
-  };
+  const [templatesByCategory, setTemplatesByCategory] = useState<{
+    traditional: TemplateInfo[];
+    modern: TemplateInfo[];
+    professional: TemplateInfo[];
+    creative: TemplateInfo[];
+    specialized: TemplateInfo[];
+  } | null>(null);
+  const [totalTemplates, setTotalTemplates] = useState<number>(0);
+
+  useEffect(() => {
+    const loadTemplates = async () => {
+      try {
+        const [traditional, modern, professional, creative, specialized, allTemplates] = await Promise.all([
+          getTemplatesByCategory('traditional'),
+          getTemplatesByCategory('modern'),
+          getTemplatesByCategory('professional'),
+          getTemplatesByCategory('creative'),
+          getTemplatesByCategory('specialized'),
+          getAvailableTemplates()
+        ]);
+
+        setTemplatesByCategory({
+          traditional,
+          modern,
+          professional,
+          creative,
+          specialized,
+        });
+        setTotalTemplates(allTemplates.length);
+      } catch (error) {
+        console.error('Error loading templates:', error);
+      }
+    };
+
+    loadTemplates();
+  }, []);
 
   const CategorySection = ({ title, templates }: { title: string; templates: TemplateInfo[] }) => (
     <div className="space-y-3">
@@ -70,6 +98,23 @@ export default function TemplateSelectionStep({ form, onBack, onNext }: Template
     </div>
   );
 
+  if (!templatesByCategory) {
+    return (
+      <Card className="shadow-lg max-w-6xl w-full">
+        <CardHeader>
+          <CardTitle className="text-2xl">Step 1: Choose a Template</CardTitle>
+          <CardDescription>Loading templates...</CardDescription>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+            <p className="text-muted-foreground">Loading templates...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="shadow-lg max-w-6xl w-full">
       <Form {...form}>
@@ -77,7 +122,7 @@ export default function TemplateSelectionStep({ form, onBack, onNext }: Template
           <CardHeader>
             <CardTitle className="text-2xl">Step 1: Choose a Template</CardTitle>
             <CardDescription>
-              Select a visual style for your resume. We now offer {availableTemplates.length} professional templates optimized for A4 printing.
+              Select a visual style for your resume. We now offer {totalTemplates} professional templates optimized for A4 printing.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
