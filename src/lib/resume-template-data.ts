@@ -4,27 +4,26 @@
  */
 
 import type { ResumeFormValues } from './schema';
-import { classicTemplate, modernTemplate, creativeTemplate } from '@/templates';
+import { availableTemplates, loadTemplate } from '@/templates';
 
 /**
  * Defines the structure for a resume template.
  */
 export interface ResumeTemplate {
-  id: 'classic' | 'modern' | 'creative';
+  id: string;
   name: string;
   html: Promise<string>;
 }
 
 /**
  * An array of available resume templates. Each object includes the template's
- * unique ID, its display name, the raw HTML content, and a React component
- * for its thumbnail preview.
+ * unique ID, its display name, and the raw HTML content.
  */
-export const templates: ResumeTemplate[] = [
-  { id: 'classic', name: 'Classic', html: classicTemplate },
-  { id: 'modern', name: 'Modern', html: modernTemplate },
-  { id: 'creative', name: 'Creative', html: creativeTemplate },
-];
+export const templates: ResumeTemplate[] = availableTemplates.map(template => ({
+  id: template.id,
+  name: template.name,
+  html: loadTemplate(template.id)
+}));
 
 /**
  * Default values for the resume form. This ensures that all fields are initialized

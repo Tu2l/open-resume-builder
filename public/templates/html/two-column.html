@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Column Resume Template</title>
+    <style>
+        /* A4 Standard Print Styles */
+        @page {
+            size: A4 portrait;
+            margin: 10mm 15mm 10mm 15mm;
+        }
+        
+        @media print {
+            body { 
+                font-size: 9pt; 
+                line-height: 1.2;
+                color: #000 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                margin: 0;
+            }
+            .resume-container {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+            }
+            .no-print { display: none !important; }
+            .page-break { page-break-before: always; }
+            .page-break-avoid { page-break-inside: avoid; }
+            .page-break-after-avoid { page-break-after: avoid; }
+            a { color: #000 !important; text-decoration: underline; }
+            .left-column { background: #2c3e50 !important; }
+        }
+        
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #2c3e50;
+            background-color: #ecf0f1;
+            line-height: 1.4;
+            font-size: 10pt;
+            margin: 0;
+            padding: 15px;
+        }
+        
+        .resume-container {
+            width: 210mm;
+            max-width: 210mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            min-height: 297mm;
+            display: flex;
+            position: relative;
+        }
+        
+        /* Two column layout */
+        .left-column {
+            width: 35%;
+            background: #2c3e50;
+            color: white;
+            padding: 25mm 20px 20px 20px;
+            page-break-inside: avoid;
+        }
+        
+        .right-column {
+            width: 65%;
+            padding: 25mm 25px 20px 25px;
+            background: white;
+        }
+        
+        /* Header in left column */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            page-break-inside: avoid;
+        }
+        
+        .name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: #ecf0f1;
+            line-height: 1.2;
+        }
+        
+        .contact-info {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: #bdc3c7;
+        }
+        
+        .contact-item {
+            margin-bottom: 0.4rem;
+            word-break: break-word;
+        }
+        
+        .contact-item a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Left column sections */
+        .left-section {
+            margin-bottom: 1.8rem;
+            page-break-inside: avoid;
+        }
+        
+        .left-section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #3498db;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.3rem;
+        }
+        
+        /* Skills in left column */
+        .skills-content {
+            color: #ecf0f1;
+            line-height: 1.5;
+            font-size: 0.85rem;
+        }
+        
+        .skills-category {
+            margin-bottom: 1rem;
+        }
+        
+        .skills-title {
+            font-weight: 700;
+            color: #3498db;
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+        }
+        
+        .skills-list {
+            color: #bdc3c7;
+        }
+        
+        /* Education in left column */
+        .education-item {
+            margin-bottom: 1.2rem;
+            page-break-inside: avoid;
+        }
+        
+        .degree {
+            font-weight: 700;
+            color: #ecf0f1;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .institution {
+            color: #3498db;
+            margin-bottom: 0.2rem;
+            font-size: 0.8rem;
+        }
+        
+        .graduation-date {
+            color: #bdc3c7;
+            font-size: 0.75rem;
+        }
+        
+        /* Right column sections */
+        .right-section {
+            margin-bottom: 2rem;
+            page-break-inside: avoid;
+        }
+        
+        .right-section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            padding-left: 1rem;
+        }
+        
+        .right-section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #3498db;
+        }
+        
+        /* Summary in right column */
+        .summary {
+            color: #34495e;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            text-align: justify;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-left: 4px solid #3498db;
+            margin-left: 1rem;
+        }
+        
+        /* Experience in right column */
+        .experience-item, .project-item, .certification-item {
+            margin-bottom: 1.5rem;
+            page-break-inside: avoid;
+            margin-left: 1rem;
+        }
+        
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.3rem;
+            flex-wrap: wrap;
+        }
+        
+        .job-title {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 1rem;
+        }
+        
+        .date-range {
+            color: #7f8c8d;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .company-location {
+            color: #3498db;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .responsibilities {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .responsibilities li {
+            margin-bottom: 0.3rem;
+            color: #34495e;
+            position: relative;
+            padding-left: 1rem;
+            line-height: 1.4;
+            font-size: 0.85rem;
+        }
+        
+        .responsibilities li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        /* Projects */
+        .project-name {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+            font-size: 0.95rem;
+        }
+        
+        .project-name a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .project-name a:hover {
+            text-decoration: underline;
+        }
+        
+        .project-description {
+            color: #34495e;
+            margin-bottom: 0.3rem;
+            line-height: 1.5;
+            font-size: 0.85rem;
+        }
+        
+        .project-technologies {
+            background: #3498db;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        /* Certifications */
+        .certification-name {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+        
+        .certification-issuer {
+            color: #7f8c8d;
+            font-style: italic;
+            font-size: 0.8rem;
+        }
+        
+        .certification-date {
+            color: #7f8c8d;
+            font-size: 0.75rem;
+            margin-top: 0.2rem;
+        }
+        
+        .certification-url a {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 0.75rem;
+        }
+        
+        .certification-url a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive adjustments for A4 */
+        @media print {
+            .left-column, .right-column {
+                page-break-inside: avoid;
+            }
+            
+            .experience-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <!-- Left Column -->
+        <div class="left-column">
+            <!-- Header -->
+            <header class="header">
+                <h1 class="name">{{{fullName}}}</h1>
+                <div class="contact-info">
+                    <div class="contact-item">{{{email}}}</div>
+                    {{#if phone}}<div class="contact-item">{{{phone}}}</div>{{/if}}
+                    {{#if website}}<div class="contact-item"><a href="{{{website}}}">{{{website}}}</a></div>{{/if}}
+                    {{#if linkedin}}<div class="contact-item"><a href="{{{linkedin}}}">LinkedIn</a></div>{{/if}}
+                    {{#if github}}<div class="contact-item"><a href="{{{github}}}">GitHub</a></div>{{/if}}
+                </div>
+            </header>
+
+            <!-- Skills Section -->
+            {{#if skills}}
+            <section class="left-section">
+                <h2 class="left-section-title">Skills</h2>
+                <div class="skills-content">{{{skills}}}</div>
+            </section>
+            {{/if}}
+
+            <!-- Education Section -->
+            {{#if education}}
+            <section class="left-section">
+                <h2 class="left-section-title">Education</h2>
+                {{#each education}}
+                <div class="education-item page-break-avoid">
+                    <h3 class="degree">{{{degree}}}</h3>
+                    <div class="institution">{{{institution}}}</div>
+                    {{#if location}}<div class="institution">{{{location}}}</div>{{/if}}
+                    {{#if graduationDate}}<div class="graduation-date">{{{graduationDate}}}</div>{{/if}}
+                </div>
+                {{/each}}
+            </section>
+            {{/if}}
+
+            <!-- Certifications Section -->
+            {{#if certifications}}
+            <section class="left-section">
+                <h2 class="left-section-title">Certifications</h2>
+                {{#each certifications}}
+                <div class="certification-item page-break-avoid">
+                    <h3 class="certification-name">{{{name}}}</h3>
+                    {{#if issuer}}<p class="certification-issuer">{{{issuer}}}</p>{{/if}}
+                    {{#if date}}<p class="certification-date">{{{date}}}</p>{{/if}}
+                    {{#if url}}<p class="certification-url"><a href="{{{url}}}">View</a></p>{{/if}}
+                </div>
+                {{/each}}
+            </section>
+            {{/if}}
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-column">
+            <!-- Summary Section -->
+            {{#if summary}}
+            <section class="right-section">
+                <h2 class="right-section-title">Summary</h2>
+                <div class="summary">{{{summary}}}</div>
+            </section>
+            {{/if}}
+
+            <!-- Experience Section -->
+            {{#if experience}}
+            <section class="right-section">
+                <h2 class="right-section-title">Experience</h2>
+                {{#each experience}}
+                <div class="experience-item page-break-avoid">
+                    <div class="experience-header">
+                        <h3 class="job-title">{{{title}}}</h3>
+                        <span class="date-range">{{{startDate}}} - {{{endDate}}}</span>
+                    </div>
+                    <div class="company-location">{{{company}}}{{#if location}} • {{{location}}}{{/if}}</div>
+                    {{#if responsibilities}}
+                    <ul class="responsibilities">
+                        {{#each responsibilities}}
+                        <li>{{{this}}}</li>
+                        {{/each}}
+                    </ul>
+                    {{/if}}
+                </div>
+                {{/each}}
+            </section>
+            {{/if}}
+
+            <!-- Projects Section -->
+            {{#if projects}}
+            <section class="right-section">
+                <h2 class="right-section-title">Projects</h2>
+                {{#each projects}}
+                <div class="project-item page-break-avoid">
+                    <h3 class="project-name">
+                        {{#if url}}<a href="{{{url}}}">{{{name}}}</a>{{else}}{{{name}}}{{/if}}
+                    </h3>
+                    {{#if description}}<p class="project-description">{{{description}}}</p>{{/if}}
+                    {{#if technologies}}<span class="project-technologies">{{{technologies}}}</span>{{/if}}
+                </div>
+                {{/each}}
+            </section>
+            {{/if}}
+        </div>
+    </div>
+</body>
+</html>
