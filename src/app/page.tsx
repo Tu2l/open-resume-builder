@@ -7,10 +7,10 @@ import { useForm } from 'react-hook-form';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import { useToast } from '@/hooks/use-toast';
-import { resumeFormDefaultValues, ResumeTemplate, templates, testData } from '@/lib/resume-template-data';
+import { resumeFormDefaultValues, ResumeTemplate, getTemplates, getTemplateByIdWithMetadata, testData } from '@/templates/resume-template-data';
 import availableModels from '@/lib/ai/gemini_models.json';
 import { jobDescriptionSchema, resumeFormSchema, type JobDescriptionValues, type ResumeFormValues } from '@/lib/schema';
-import { getResumeAsPlainText, renderSimpleTemplate } from '@/lib/template-helpers';
+import { getResumeAsPlainText, renderSimpleTemplate } from '@/templates/template-helpers';
 
 // Form Step Components
 import ErrorView from '@/components/form/ErrorView';
@@ -88,7 +88,9 @@ export default function HomePage() {
 
     const handleFillWithSampleData = () => {
         const action = () => {
-            resumeForm.reset(testData);
+            const currentTemplate = resumeForm.watch('template');
+            const sampleDataWithCurrentTemplate = { ...testData, template: currentTemplate };
+            resumeForm.reset(sampleDataWithCurrentTemplate);
             toast({ title: 'Sample Data Loaded', description: 'The form has been filled with sample data.' });
         };
 
@@ -153,7 +155,7 @@ export default function HomePage() {
         }
     };
 
-    const handleGenerateResume = (data: ResumeFormValues) => {
+    const handleGenerateResume = async (data: ResumeFormValues) => {
         setIsLoading(true);
         setLoadingMessage('Generating your resume...');
         setError(null);
@@ -169,9 +171,10 @@ export default function HomePage() {
                 return;
             }
 
+            const templates = await getTemplates();
             const selectedTemplate = templates.find(t => t.id === data.template);
             if (!selectedTemplate) {
-                throw new Error("Invalid template selected.");
+                throw new Error(`Template '${data.template}' is not available. Please select a different template.`);
             }
 
             generateOriginalResumeFromTemplate(selectedTemplate, data);
@@ -224,9 +227,10 @@ export default function HomePage() {
 
             const validatedData = resumeFormSchema.parse(generationResultJson);
 
+            const templates = await getTemplates();
             const selectedTemplate = templates.find(t => t.id === validatedData.template);
             if (!selectedTemplate) {
-                throw new Error("Invalid template selected after enhancement.");
+                throw new Error(`Template '${validatedData.template}' is not available after enhancement. Please try a different template.`);
             }
 
             resumeForm.reset(validatedData);
@@ -329,8 +333,68 @@ export default function HomePage() {
         if (printWindow) {
             printWindow.document.write(`
               <html>
-                  <head><title>Print Resume</title><style>${getTailwindStyles()}</style></head>
-                  <body>${content}</body>
+                  <head>
+                      <meta charset="UTF-8">
+                      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                      <title>Resume - Print</title>
+                      <style>
+                          /* Reset browser default margins and padding */
+                          * {
+                              margin: 0;
+                              padding: 0;
+                              box-sizing: border-box;
+                          }
+                          
+                          /* Set proper page margins for printing */
+                          @page {
+                              size: A4;
+                              margin: 0;
+                          }
+                          
+                          /* Body styling to match preview */
+                          body {
+                              background: white;
+                              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                              line-height: 1.6;
+                              color: #333;
+                              width: 100%;
+                              height: 100vh;
+                              display: flex;
+                              justify-content: center;
+                              align-items: flex-start;
+                              padding: 0;
+                          }
+                          
+                          /* Container to match preview styling */
+                          .print-container {
+                              width: 210mm; /* A4 width */
+                              min-height: 297mm; /* A4 height */
+                              background: white;
+                              box-shadow: none;
+                              margin: 0;
+                              padding: 0;
+                          }
+                          
+                          /* Ensure content fits properly */
+                          @media print {
+                              body {
+                                  padding: 0;
+                                  margin: 0;
+                              }
+                              
+                              .print-container {
+                                  width: 100%;
+                                  max-width: none;
+                                  box-shadow: none;
+                                  margin: 0;
+                                  padding: 0;
+                              }
+                          }
+                      </style>
+                  </head>
+                  <body>
+                      <div class="print-container">${content}</div>
+                  </body>
               </html>
           `);
             printWindow.document.close();
@@ -404,7 +468,7 @@ export default function HomePage() {
                     editedHtml={editedHtml}
                     isEditingHtml={isEditingHtml}
                     enhancedResumeHtml={enhancedResumeHtml}
-                    analysis={appState.analysis}
+                    analysis={appState.step === 'result' ? appState.analysis : undefined}
                     onBackToEdit={() => setAppState({ step: 'form', currentFormStep: formSteps.length - 1 })}
                     onStartNewResume={() => setAppState({ step: 'welcome' })}
                     onRevert={handleRevert}

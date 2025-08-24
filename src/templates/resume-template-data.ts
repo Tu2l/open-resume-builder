@@ -3,8 +3,8 @@
  * such as test data and template definitions.
  */
 
-import type { ResumeFormValues } from './schema';
-import { availableTemplates, loadTemplate } from '@/templates';
+import type { ResumeFormValues } from '../lib/schema';
+import { getAvailableTemplates, getTemplateById } from '@/templates';
 
 /**
  * Defines the structure for a resume template.
@@ -16,14 +16,44 @@ export interface ResumeTemplate {
 }
 
 /**
- * An array of available resume templates. Each object includes the template's
- * unique ID, its display name, and the raw HTML content.
+ * Get all available resume templates dynamically from configuration
  */
-export const templates: ResumeTemplate[] = availableTemplates.map(template => ({
-  id: template.id,
-  name: template.name,
-  html: loadTemplate(template.id)
-}));
+export const getTemplates = async (): Promise<ResumeTemplate[]> => {
+  const availableTemplates = await getAvailableTemplates();
+  return availableTemplates.map(template => ({
+    id: template.id,
+    name: template.name,
+    html: getTemplateById(template.id)
+  }));
+};
+
+/**
+ * Get a specific template by ID
+ */
+export const getTemplateByIdWithMetadata = async (templateId: string): Promise<ResumeTemplate | null> => {
+  try {
+    const availableTemplates = await getAvailableTemplates();
+    const templateInfo = availableTemplates.find(t => t.id === templateId);
+    
+    if (!templateInfo) {
+      return null;
+    }
+
+    return {
+      id: templateInfo.id,
+      name: templateInfo.name,
+      html: getTemplateById(templateInfo.id)
+    };
+  } catch (error) {
+    console.error(`Error loading template ${templateId}:`, error);
+    return null;
+  }
+};
+
+/**
+ * For backward compatibility, export templates as a promise
+ */
+export const templates: Promise<ResumeTemplate[]> = getTemplates();
 
 /**
  * Default values for the resume form. This ensures that all fields are initialized

@@ -60,3 +60,23 @@ Open [http://localhost:9002](http://localhost:9002) with your browser to see the
 The application operates entirely on the client side. When you provide your resume data and a job description for enhancement, the application constructs a prompt and sends it directly to the Google Gemini API from your browser. The API's response is then used to update the resume content in real-time. This architecture ensures that your sensitive information remains private.
 
 To use the AI enhancement feature, you will need to obtain a free API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+
+## Template Management
+
+The application includes a comprehensive template management system with automation scripts located in the `scripts/` directory:
+
+```bash
+# Add new templates
+./scripts/add-template.sh luxury "Luxury Executive" "Premium design" professional "Luxury,Premium"
+
+# Discover unconfigured templates  
+./scripts/discover-templates.sh
+
+# Validate system integrity
+./scripts/validate-templates.sh
+
+# Remove templates safely
+./scripts/remove-template.sh luxury
+```
+
+For complete template documentation, see [`docs/TEMPLATE_SYSTEM.md`](docs/TEMPLATE_SYSTEM.md).
