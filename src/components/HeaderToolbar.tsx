@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AppState } from '@/lib/AppState';
 import { ResumeFormValues } from '@/lib/schema';
-import { Download, FileText, FileType, RefreshCw, Share, TestTube2 } from 'lucide-react';
+import { Download, FileText, FileType, Home, RefreshCw, Share, TestTube2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
 interface HeaderToolbarProps {
@@ -15,9 +15,10 @@ interface HeaderToolbarProps {
     handleExport: () => void;
     handleDownloadHtml: () => void;
     handlePrint: () => void;
+    handleBackHome: () => void;
 }
 
-export default function HeaderToolbar({ appState, resumeForm, handleResetForm, handleFillWithSampleData, originalResumeHtml, enhancedResumeHtml, handleExport, handleDownloadHtml, handlePrint }: HeaderToolbarProps) {
+export default function HeaderToolbar({ appState, resumeForm, handleResetForm, handleFillWithSampleData, originalResumeHtml, enhancedResumeHtml, handleExport, handleDownloadHtml, handlePrint, handleBackHome }: HeaderToolbarProps) {
     return <header className="fixed top-0 z-30 w-full border-b bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-auto min-h-16 flex-col sm:flex-row items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
             <div className="flex items-center gap-3">
@@ -25,6 +26,7 @@ export default function HeaderToolbar({ appState, resumeForm, handleResetForm, h
                 <h1 className="text-2xl font-bold tracking-tight">Resume AI</h1>
             </div>
             <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2">
+                {(appState.step !== 'welcome' && appState.step !== 'result') && <Button onClick={handleBackHome} size="sm" variant="outline"><Home className="mr-2" /> Home</Button>}
                 {appState.step === 'form' && (
                     <>
                         {!!resumeForm.watch('fullName') && (
@@ -46,7 +48,7 @@ export default function HeaderToolbar({ appState, resumeForm, handleResetForm, h
                                 <Button onClick={handlePrint} size="sm" variant="default"><FileType className="mr-2" /> PDF</Button>
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p>Use browser&apos;s &quot;Save as PDF&quot; option</p>
+                                <p>Click to Generate and Download PDF</p>
                             </TooltipContent>
                         </Tooltip>
                     </>

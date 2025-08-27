@@ -26,6 +26,13 @@ import { AppState } from '../lib/AppState';
 import HeaderToolbar from '@/components/HeaderToolbar';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
+import dynamic from 'next/dynamic';
+
+const DynamicComponentWithNoSSR = dynamic(
+    () => import('html2pdf.js'),
+    { ssr: false }
+);
+
 
 /**
  * Defines the sequence of steps in the resume creation form.
@@ -307,101 +314,36 @@ export default function HomePage() {
         reader.readAsText(file);
     }
 
-    const getTailwindStyles = () => {
-        let css = '';
-        for (const sheet of Array.from(document.styleSheets)) {
-            try {
-                if (sheet.cssRules) {
-                    for (const rule of Array.from(sheet.cssRules)) {
-                        css += rule.cssText;
-                    }
-                }
-            } catch (e) {
-                console.warn("Can't read stylesheet", e);
-            }
-        }
-        return css;
-    }
 
-    const handlePrint = () => {
-        const content = editedHtml;
-        if (!content) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Could not find resume content to print.' });
-            return;
-        }
-        const printWindow = window.open('', '_blank');
-        if (printWindow) {
-            printWindow.document.write(`
-              <html>
-                  <head>
-                      <meta charset="UTF-8">
-                      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                      <title>Resume - Print</title>
-                      <style>
-                          /* Reset browser default margins and padding */
-                          * {
-                              margin: 0;
-                              padding: 0;
-                              box-sizing: border-box;
-                          }
-                          
-                          /* Set proper page margins for printing */
-                          @page {
-                              size: A4;
-                              margin: 0;
-                          }
-                          
-                          /* Body styling to match preview */
-                          body {
-                              background: white;
-                              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-                              line-height: 1.6;
-                              color: #333;
-                              width: 100%;
-                              height: 100vh;
-                              display: flex;
-                              justify-content: center;
-                              align-items: flex-start;
-                              padding: 0;
-                          }
-                          
-                          /* Container to match preview styling */
-                          .print-container {
-                              width: 210mm; /* A4 width */
-                              min-height: 297mm; /* A4 height */
-                              background: white;
-                              box-shadow: none;
-                              margin: 0;
-                              padding: 0;
-                          }
-                          
-                          /* Ensure content fits properly */
-                          @media print {
-                              body {
-                                  padding: 0;
-                                  margin: 0;
-                              }
-                              
-                              .print-container {
-                                  width: 100%;
-                                  max-width: none;
-                                  box-shadow: none;
-                                  margin: 0;
-                                  padding: 0;
-                              }
-                          }
-                      </style>
-                  </head>
-                  <body>
-                      <div class="print-container">${content}</div>
-                  </body>
-              </html>
-          `);
-            printWindow.document.close();
-            printWindow.focus();
-            setTimeout(() => { printWindow.print(); }, 250);
-        } else {
-            toast({ variant: 'destructive', title: 'Error', description: 'Could not open print window. Please disable your pop-up blocker.' });
+   const generatePdf = async () => {
+        try {
+            toast({ title: "Please wait", description: "PDF is being generated" });
+            
+            const opt = {
+                margin: [0, 0, 0, 0],
+                filename: `${resumeForm.getValues().fullName.replaceAll(" ", "_")}_resume.pdf`,
+                image: { type: 'png', quality: 1 },
+                html2canvas: {
+                    dpi: 192,
+                    scale: 4,
+                    letterRendering: true,
+                    useCORS: true
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'portrait',
+                    compress: true
+                }
+            };
+            
+            const html2pdf = (await import('html2pdf.js')).default;
+            await html2pdf(editedHtml, opt);
+            
+            toast({ title: "PDF Generated", description: "Your resume PDF has been generated." });
+        } catch (err) {
+            console.error('PDF generation error:', err);
+            toast({ variant: 'destructive', title: "PDF Generation Failed", description: "There was an error generating your resume PDF." });
         }
     };
 
@@ -510,7 +452,7 @@ export default function HomePage() {
             />
 
             <div className="flex flex-col min-h-dvh bg-secondary/50 items-center justify-center">
-                <HeaderToolbar 
+                <HeaderToolbar
                     appState={appState}
                     resumeForm={resumeForm}
                     handleResetForm={handleResetForm}
@@ -519,7 +461,8 @@ export default function HomePage() {
                     enhancedResumeHtml={enhancedResumeHtml}
                     handleExport={handleExport}
                     handleDownloadHtml={handleDownloadHtml}
-                    handlePrint={handlePrint}
+                    handlePrint={generatePdf}
+                    handleBackHome={() => setAppState({ step: 'welcome' })}
                 />
 
                 <main className="flex-1 container mx-auto p-4 pt-36 pb-36 sm:pt-24 sm:pb-24 lg:p-8 lg:pt-28 lg:pb-28 flex items-center justify-center">
