@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
 import { ResumeFormValues } from '@/lib/schema';
-import { getAvailableTemplates, getTemplatesByCategory, TemplateInfo } from '@/templates';
+import { getAvailableTemplates, getAllCategories, TemplateInfo } from '@/templates';
 import  TemplateThumbnail  from '@/components/TemplateThumbnail';
 import { useEffect, useState } from 'react';
 
@@ -20,34 +20,18 @@ interface TemplateSelectionStepProps {
 
 export default function TemplateSelectionStep({ form, onBack, onNext }: TemplateSelectionStepProps) {
   const selectedTemplateId = form.watch('template');
-  const [templatesByCategory, setTemplatesByCategory] = useState<{
-    traditional: TemplateInfo[];
-    modern: TemplateInfo[];
-    professional: TemplateInfo[];
-    creative: TemplateInfo[];
-    specialized: TemplateInfo[];
-  } | null>(null);
+  const [templatesByCategory, setTemplatesByCategory] = useState<Record<string, TemplateInfo[]> | null>(null);
   const [totalTemplates, setTotalTemplates] = useState<number>(0);
 
   useEffect(() => {
     const loadTemplates = async () => {
       try {
-        const [traditional, modern, professional, creative, specialized, allTemplates] = await Promise.all([
-          getTemplatesByCategory('traditional'),
-          getTemplatesByCategory('modern'),
-          getTemplatesByCategory('professional'),
-          getTemplatesByCategory('creative'),
-          getTemplatesByCategory('specialized'),
+        const [categorizedTemplates, allTemplates] = await Promise.all([
+          getAllCategories(),
           getAvailableTemplates()
         ]);
 
-        setTemplatesByCategory({
-          traditional,
-          modern,
-          professional,
-          creative,
-          specialized,
-        });
+        setTemplatesByCategory(categorizedTemplates);
         setTotalTemplates(allTemplates.length);
       } catch (error) {
         console.error('Error loading templates:', error);
@@ -137,11 +121,13 @@ export default function TemplateSelectionStep({ form, onBack, onNext }: Template
                       defaultValue={field.value}
                       className="space-y-6"
                     >
-                      <CategorySection title="Traditional" templates={templatesByCategory.traditional} />
-                      <CategorySection title="Modern" templates={templatesByCategory.modern} />
-                      <CategorySection title="Professional" templates={templatesByCategory.professional} />
-                      <CategorySection title="Creative" templates={templatesByCategory.creative} />
-                      <CategorySection title="Specialized" templates={templatesByCategory.specialized} />
+                      {Object.entries(templatesByCategory).map(([categoryName, templates]) => (
+                        <CategorySection
+                          key={categoryName}
+                          title={categoryName.charAt(0).toUpperCase() + categoryName.slice(1)}
+                          templates={templates}
+                        />
+                      ))}
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />

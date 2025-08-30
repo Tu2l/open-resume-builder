@@ -5,7 +5,7 @@ export interface TemplateInfo {
   id: string;
   name: string;
   description: string;
-  category: 'traditional' | 'modern' | 'creative' | 'professional' | 'specialized';
+  category: string;
   features: string[];
 }
 
@@ -98,9 +98,35 @@ export const getTemplateInfo = async (templateId: string): Promise<TemplateInfo 
 /**
  * Get templates by category
  */
-export const getTemplatesByCategory = async (category: TemplateInfo['category']): Promise<TemplateInfo[]> => {
+export const getTemplatesByCategory = async (category: string): Promise<TemplateInfo[]> => {
   const templates = await getAvailableTemplates();
   return templates.filter(template => template.category === category);
+};
+
+/**
+ * Get all available categories with their templates
+ */
+export const getAllCategories = async (): Promise<Record<string, TemplateInfo[]>> => {
+  const templates = await getAvailableTemplates();
+  const categories: Record<string, TemplateInfo[]> = {};
+  
+  templates.forEach(template => {
+    if (!categories[template.category]) {
+      categories[template.category] = [];
+    }
+    categories[template.category].push(template);
+  });
+  
+  return categories;
+};
+
+/**
+ * Get list of unique category names
+ */
+export const getCategoryNames = async (): Promise<string[]> => {
+  const templates = await getAvailableTemplates();
+  const categorySet = new Set(templates.map(template => template.category));
+  return Array.from(categorySet);
 };
 
 /**

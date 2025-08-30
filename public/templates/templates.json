@@ -4,7 +4,7 @@
       "id": "classic",
       "name": "Classic",
       "description": "Traditional resume format with clean typography",
-      "category": "traditional",
+      "category": "general",
       "thumbnail": "classic.svg",
       "features": [
         "Clean layout",
@@ -16,7 +16,7 @@
       "id": "modern",
       "name": "Modern",
       "description": "Contemporary design with subtle styling",
-      "category": "modern",
+      "category": "general",
       "thumbnail": "modern.svg",
       "features": [
         "Modern design",
@@ -28,7 +28,7 @@
       "id": "creative",
       "name": "Creative",
       "description": "Artistic template for creative professionals",
-      "category": "creative",
+      "category": "general",
       "thumbnail": "creative.svg",
       "features": [
         "Colorful design",
@@ -40,7 +40,7 @@
       "id": "minimalist",
       "name": "Minimalist",
       "description": "Clean and simple design with maximum readability",
-      "category": "modern",
+      "category": "general",
       "thumbnail": "minimalist.svg",
       "features": [
         "Minimal design",
@@ -52,7 +52,7 @@
       "id": "technical",
       "name": "Technical",
       "description": "Developer-focused template with code aesthetics",
-      "category": "specialized",
+      "category": "general",
       "thumbnail": "technical.svg",
       "features": [
         "Tech-focused",
@@ -64,7 +64,7 @@
       "id": "two-column",
       "name": "Two Column",
       "description": "Space-efficient layout with sidebar",
-      "category": "modern",
+      "category": "general",
       "thumbnail": "two-column.svg",
       "features": [
         "Two-column layout",
@@ -76,36 +76,12 @@
       "id": "compact",
       "name": "Compact",
       "description": "Optimized for maximum content in minimal space",
-      "category": "specialized",
+      "category": "general",
       "thumbnail": "compact.svg",
       "features": [
         "Space-optimized",
         "Compact layout",
         "Content-heavy"
-      ]
-    },
-    {
-      "id": "modern-executive",
-      "name": "Modern Executive",
-      "description": "Contemporary executive template with gradient design",
-      "category": "professional",
-      "thumbnail": "modern-executive.svg",
-      "features": [
-        "Executive level",
-        "Modern gradient",
-        "Leadership focus"
-      ]
-    },
-    {
-      "id": "academic",
-      "name": "Academic",
-      "description": "Research-focused template for academics",
-      "category": "specialized",
-      "thumbnail": "academic.svg",
-      "features": [
-        "Academic format",
-        "Publication focus",
-        "Research-oriented"
       ]
     }
   ]
