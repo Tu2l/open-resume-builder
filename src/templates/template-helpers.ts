@@ -20,10 +20,23 @@ import type { ResumeFormValues } from '../lib/schema';
  * @param {JSON} data The data object containing values to inject into the template.
  * @returns {string} The rendered HTML string.
  */
-export function renderSimpleTemplate(template: string, data: JSON): string {
+export function renderSimpleTemplate(template: string, data: ResumeFormValues): string {
     // Notice - homegrown logic is replaced with handlebars.js to make it compatible with universal templates
+    // Transform skills string into structured data for template compatibility
+    const transformedData = {
+      ...data,
+      skills: data.skills ? data.skills.split(';').map(category => {
+        const [categoryName, skillsList] = category.split(':');
+        if (!categoryName || !skillsList) return null;
+        
+        return {
+          category: categoryName.trim(),
+          items: skillsList.trim()
+        };
+      }).filter(Boolean) : []
+    };
     const mappedTemplate = Handlebars.compile(template);
-    return mappedTemplate(data);
+    return mappedTemplate(transformedData);
 }
 
 

@@ -203,7 +203,8 @@ export default function HomePage() {
                 setAppState({ step: 'result' });
             })
             .catch(err => {
-                throw new Error(`Failed to load template: ${err.message}`);
+                const errorMessage = err.message || 'An unexpected error occurred.';
+                toast({ variant: 'destructive', title: 'Error', description: errorMessage });
             });
     }
 
@@ -315,10 +316,10 @@ export default function HomePage() {
     }
 
 
-   const generatePdf = async () => {
+    const generatePdf = async () => {
         try {
             toast({ title: "Please wait", description: "PDF is being generated" });
-            
+
             const opt = {
                 margin: [0, 0, 0, 0],
                 filename: `${resumeForm.getValues().fullName.replaceAll(" ", "_")}_resume.pdf`,
@@ -336,10 +337,10 @@ export default function HomePage() {
                     compress: true
                 }
             };
-            
+
             const html2pdf = (await import('html2pdf.js')).default;
             await html2pdf(editedHtml, opt);
-            
+
             toast({ title: "PDF Generated", description: "Your resume PDF has been generated." });
         } catch (err) {
             console.error('PDF generation error:', err);

@@ -49,30 +49,6 @@
       ]
     },
     {
-      "id": "professional",
-      "name": "Professional",
-      "description": "Corporate-style template with gradient header",
-      "category": "professional",
-      "thumbnail": "professional.svg",
-      "features": [
-        "Corporate style",
-        "Gradient header",
-        "Professional colors"
-      ]
-    },
-    {
-      "id": "executive",
-      "name": "Executive",
-      "description": "Sophisticated template for senior-level positions",
-      "category": "professional",
-      "thumbnail": "executive.svg",
-      "features": [
-        "Executive styling",
-        "Elegant typography",
-        "Premium look"
-      ]
-    },
-    {
       "id": "technical",
       "name": "Technical",
       "description": "Developer-focused template with code aesthetics",
@@ -94,18 +70,6 @@
         "Two-column layout",
         "Space efficient",
         "Sidebar design"
-      ]
-    },
-    {
-      "id": "elegant",
-      "name": "Elegant",
-      "description": "Sophisticated design with decorative elements",
-      "category": "creative",
-      "thumbnail": "elegant.svg",
-      "features": [
-        "Elegant styling",
-        "Decorative elements",
-        "Artistic flair"
       ]
     },
     {
@@ -142,18 +106,6 @@
         "Academic format",
         "Publication focus",
         "Research-oriented"
-      ]
-    },
-    {
-      "id": "sales",
-      "name": "Sales Professional",
-      "description": "Performance-focused template for sales roles",
-      "category": "specialized",
-      "thumbnail": "sales.svg",
-      "features": [
-        "Metrics-focused",
-        "Achievement highlights",
-        "Sales-optimized"
       ]
     }
   ]

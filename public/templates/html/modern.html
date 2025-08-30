@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,60 +9,67 @@
         /* A4 Standard Print Styles */
         @page {
             size: A4 portrait;
-            margin: 12mm 15mm 12mm 15mm; /* A4 standard margins - tighter for two columns */
+            margin: 12mm 15mm 12mm 15mm;
+            /* A4 standard margins - tighter for two columns */
         }
-        
+
         /* Enhanced Page Break Handling */
         .section {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 1rem;
         }
-        
-        .experience-item, .education-item, .project-item, .certification-item {
+
+        .experience-item,
+        .education-item,
+        .project-item,
+        .certification-item {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.8rem;
         }
-        
+
         .page-break-before-auto {
             break-before: auto;
             page-break-before: auto;
         }
-        
+
         .page-break-avoid {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
+
         .page-break-after-avoid {
             break-after: avoid;
             page-break-after: avoid;
         }
-        
+
         .header {
             break-after: avoid;
             page-break-after: avoid;
         }
-        
+
         .section-title {
             break-after: avoid;
             page-break-after: avoid;
             margin-bottom: 0.6rem;
         }
-        
-        .responsibilities, .job-responsibilities {
+
+        .responsibilities,
+        .job-responsibilities {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
-        .responsibilities li, .job-responsibilities li {
+
+        .responsibilities li,
+        .job-responsibilities li {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.2rem;
         }
-        
-        .skills-category, .skill-category {
+
+        .skills-category,
+        .skill-category {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.8rem;
@@ -73,114 +81,156 @@
             page-break-inside: avoid;
             margin-bottom: 1rem;
         }
-        
-        .experience-item, .education-item, .project-item, .certification-item {
+
+        .experience-item,
+        .education-item,
+        .project-item,
+        .certification-item {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.8rem;
         }
-        
+
         .page-break-before-auto {
             break-before: auto;
             page-break-before: auto;
         }
-        
+
         .page-break-avoid {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
+
         .page-break-after-avoid {
             break-after: avoid;
             page-break-after: avoid;
         }
-        
+
         .header {
             break-after: avoid;
             page-break-after: avoid;
         }
-        
+
         .section-title {
             break-after: avoid;
             page-break-after: avoid;
             margin-bottom: 0.6rem;
         }
-        
-        .responsibilities, .job-responsibilities {
+
+        .responsibilities,
+        .job-responsibilities {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
-        .responsibilities li, .job-responsibilities li {
+
+        .responsibilities li,
+        .job-responsibilities li {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.2rem;
         }
-        
-        .skills-category, .skill-category {
+
+        .skills-category,
+        .skill-category {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.8rem;
         }
 
         @media print {
-            body { 
-                font-size: 9.5pt; 
+            body {
+                font-size: 9.5pt;
                 line-height: 1.15;
                 color: #000 !important;
                 -webkit-print-color-adjust: exact;
-            .section {
-                margin-bottom: 0.8rem;
-            .section {
-                margin-bottom: 0.8rem;
+
+                .section {
+                    margin-bottom: 0.8rem;
+
+                    .section {
+                        margin-bottom: 0.8rem;
+                    }
+
+                    .experience-item,
+                    .education-item,
+                    .project-item,
+                    .certification-item {
+                        margin-bottom: 0.6rem;
+                    }
+
+                    .responsibilities li,
+                    .job-responsibilities li {
+                        margin-bottom: 0.1rem;
+                    }
+                }
+
+                .experience-item,
+                .education-item,
+                .project-item,
+                .certification-item {
+                    margin-bottom: 0.6rem;
+                }
+
+                .responsibilities li,
+                .job-responsibilities li {
+                    margin-bottom: 0.1rem;
+                }
             }
-            .experience-item, .education-item, .project-item, .certification-item {
-                margin-bottom: 0.6rem;
+
+            .no-print {
+                display: none !important;
             }
-            .responsibilities li, .job-responsibilities li {
-                margin-bottom: 0.1rem;
+
+            .page-break {
+                page-break-before: always;
             }
+
+            .page-break-avoid {
+                page-break-inside: avoid;
             }
-            .experience-item, .education-item, .project-item, .certification-item {
-                margin-bottom: 0.6rem;
+
+            .page-break-after-avoid {
+                page-break-after: avoid;
             }
-            .responsibilities li, .job-responsibilities li {
-                margin-bottom: 0.1rem;
+
+            a {
+                color: #000 !important;
+                text-decoration: underline;
             }
+
+            .left-column {
+                background: #f8fafc !important;
             }
-            .no-print { display: none !important; }
-            .page-break { page-break-before: always; }
-            .page-break-avoid { page-break-inside: avoid; }
-            .page-break-after-avoid { page-break-after: avoid; }
-            a { color: #000 !important; text-decoration: underline; }
-            .left-column { background: #f8fafc !important; }
         }
-        
+
         /* Base styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #ffffff;
             line-height: 1.3;
-            font-size: 11px; /* Optimized for A4 two-column */
+            font-size: 11px;
+            /* Optimized for A4 two-column */
         }
-        
+
         .resume-container {
-            width: 210mm; /* A4 width */
+            width: 210mm;
+            /* A4 width */
             max-width: 210mm;
             margin: 0 auto;
             background: white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            min-height: 297mm; /* A4 height */
+            min-height: 297mm;
+            /* A4 height */
             display: flex;
             overflow: hidden;
         }
-        
+
         /* Left Column - A4 optimized */
         .left-column {
             width: 35%;
@@ -189,13 +239,13 @@
             border-right: 1px solid #e2e8f0;
             page-break-inside: avoid;
         }
-        
+
         .header {
             text-align: left;
             margin-bottom: 1rem;
             page-break-inside: avoid;
         }
-        
+
         .name {
             font-size: 1.5rem;
             font-weight: 800;
@@ -203,17 +253,17 @@
             line-height: 1.1;
             margin-bottom: 0.3rem;
         }
-        
+
         /* Left column sections */
         .left-section {
             margin-bottom: 1rem;
             page-break-inside: avoid;
         }
-        
+
         .left-section:last-child {
             margin-bottom: 0;
         }
-        
+
         .left-section-title {
             font-size: 1rem;
             font-weight: 700;
@@ -222,38 +272,38 @@
             padding-bottom: 0.15rem;
             margin-bottom: 0.5rem;
         }
-        
+
         /* Contact section */
         .contact-info {
             font-size: 0.8rem;
             color: #475569;
             line-height: 1.4;
         }
-        
+
         .contact-info p {
             margin-bottom: 0.3rem;
         }
-        
+
         .contact-info a {
             color: #0f766e;
             text-decoration: none;
             transition: text-decoration 0.2s;
         }
-        
+
         .contact-info a:hover {
             text-decoration: underline;
         }
-        
+
         /* Education section in left column */
         .education-item-left {
             margin-bottom: 0.6rem;
             page-break-inside: avoid;
         }
-        
+
         .education-item-left:last-child {
             margin-bottom: 0;
         }
-        
+
         .institution-left {
             font-size: 0.85rem;
             font-weight: 600;
@@ -261,60 +311,60 @@
             margin-bottom: 0.1rem;
             line-height: 1.2;
         }
-        
+
         .degree-left {
             font-size: 0.8rem;
             color: #475569;
             margin-bottom: 0.1rem;
         }
-        
+
         .education-details-left {
             font-size: 0.75rem;
             color: #64748b;
         }
-        
+
         /* Skills section */
         .skills-container {
             font-size: 0.8rem;
         }
-        
+
         .skills-category {
             margin-bottom: 0.4rem;
             page-break-inside: avoid;
         }
-        
+
         .skills-title {
             font-weight: 600;
             color: #334155;
             font-size: 0.85rem;
             margin-bottom: 0.2rem;
         }
-        
+
         .skills-list {
             color: #475569;
             line-height: 1.3;
         }
-        
+
         .skills-item {
             color: #475569;
             font-size: 0.8rem;
         }
-        
+
         /* Right Column - A4 optimized */
         .right-column {
             width: 65%;
             padding: 1.2rem 1rem 1rem 1.2rem;
         }
-        
+
         .right-section {
             margin-bottom: 1rem;
             page-break-inside: avoid;
         }
-        
+
         .right-section:last-child {
             margin-bottom: 0;
         }
-        
+
         .right-section-title {
             font-size: 1.1rem;
             font-weight: 600;
@@ -323,7 +373,7 @@
             padding-bottom: 0.3rem;
             margin-bottom: 0.6rem;
         }
-        
+
         /* Summary section */
         .summary {
             font-size: 0.95rem;
@@ -331,17 +381,17 @@
             line-height: 1.4;
             text-align: justify;
         }
-        
+
         /* Experience section - A4 optimized */
         .experience-item {
             margin-bottom: 0.8rem;
             page-break-inside: avoid;
         }
-        
+
         .experience-item:last-child {
             margin-bottom: 0;
         }
-        
+
         .experience-header {
             display: flex;
             justify-content: space-between;
@@ -350,7 +400,7 @@
             flex-wrap: wrap;
             gap: 0.3rem;
         }
-        
+
         .job-info h3 {
             font-size: 1rem;
             font-weight: 700;
@@ -358,13 +408,13 @@
             margin-bottom: 0.1rem;
             line-height: 1.1;
         }
-        
+
         .company-location {
             font-size: 0.85rem;
             font-weight: 600;
             color: #475569;
         }
-        
+
         .date-range {
             font-size: 0.75rem;
             color: #64748b;
@@ -372,37 +422,37 @@
             white-space: nowrap;
             padding-top: 0.1rem;
         }
-        
+
         .responsibilities {
             list-style-type: disc;
             list-style-position: inside;
             margin-top: 0.3rem;
         }
-        
+
         .responsibilities li {
             font-size: 0.85rem;
             color: #475569;
             margin-bottom: 0.15rem;
             line-height: 1.25;
         }
-        
+
         /* Projects section - A4 optimized */
         .project-item {
             margin-bottom: 0.8rem;
             page-break-inside: avoid;
         }
-        
+
         .project-item:last-child {
             margin-bottom: 0;
         }
-        
+
         .project-title {
             font-size: 1rem;
             font-weight: 700;
             color: #1e293b;
             margin-bottom: 0.1rem;
         }
-        
+
         .project-link {
             font-size: 0.8rem;
             color: #0f766e;
@@ -410,43 +460,43 @@
             margin-left: 0.3rem;
             transition: text-decoration 0.2s;
         }
-        
+
         .project-link:hover {
             text-decoration: underline;
         }
-        
+
         .project-tech {
             font-size: 0.75rem;
             font-style: italic;
             color: #64748b;
             margin-bottom: 0.2rem;
         }
-        
+
         .project-description {
             font-size: 0.85rem;
             color: #475569;
             line-height: 1.25;
         }
-        
+
         /* Certifications section - A4 optimized */
         .certification-item {
             margin-bottom: 0.3rem;
             page-break-inside: avoid;
         }
-        
+
         .certification-item:last-child {
             margin-bottom: 0;
         }
-        
+
         .cert-content {
             font-size: 0.85rem;
             color: #475569;
         }
-        
+
         .cert-name {
             font-weight: 700;
         }
-        
+
         .cert-link {
             font-size: 0.75rem;
             color: #0f766e;
@@ -454,11 +504,11 @@
             margin-left: 0.3rem;
             transition: text-decoration 0.2s;
         }
-        
+
         .cert-link:hover {
             text-decoration: underline;
         }
-        
+
         /* Responsive design for mobile */
         @media (max-width: 768px) {
             .resume-container {
@@ -466,28 +516,28 @@
                 margin: 1rem;
                 box-shadow: none;
             }
-            
+
             .left-column,
             .right-column {
                 width: 100%;
                 padding: 1rem;
             }
-            
+
             .left-column {
                 border-right: none;
                 border-bottom: 1px solid #e2e8f0;
             }
-            
+
             .name {
                 font-size: 1.8rem;
                 text-align: center;
             }
-            
+
             .header {
                 text-align: center;
             }
         }
-        
+
         /* Print-specific two-column handling */
         /* Enhanced Page Break Handling */
         .section {
@@ -495,51 +545,57 @@
             page-break-inside: avoid;
             margin-bottom: 1rem;
         }
-        
-        .experience-item, .education-item, .project-item, .certification-item {
+
+        .experience-item,
+        .education-item,
+        .project-item,
+        .certification-item {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.8rem;
         }
-        
+
         .page-break-before-auto {
             break-before: auto;
             page-break-before: auto;
         }
-        
+
         .page-break-avoid {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
+
         .page-break-after-avoid {
             break-after: avoid;
             page-break-after: avoid;
         }
-        
+
         .header {
             break-after: avoid;
             page-break-after: avoid;
         }
-        
+
         .section-title {
             break-after: avoid;
             page-break-after: avoid;
             margin-bottom: 0.6rem;
         }
-        
-        .responsibilities, .job-responsibilities {
+
+        .responsibilities,
+        .job-responsibilities {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
-        .responsibilities li, .job-responsibilities li {
+
+        .responsibilities li,
+        .job-responsibilities li {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.2rem;
         }
-        
-        .skills-category, .skill-category {
+
+        .skills-category,
+        .skill-category {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.8rem;
@@ -551,51 +607,57 @@
             page-break-inside: avoid;
             margin-bottom: 1rem;
         }
-        
-        .experience-item, .education-item, .project-item, .certification-item {
+
+        .experience-item,
+        .education-item,
+        .project-item,
+        .certification-item {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.8rem;
         }
-        
+
         .page-break-before-auto {
             break-before: auto;
             page-break-before: auto;
         }
-        
+
         .page-break-avoid {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
+
         .page-break-after-avoid {
             break-after: avoid;
             page-break-after: avoid;
         }
-        
+
         .header {
             break-after: avoid;
             page-break-after: avoid;
         }
-        
+
         .section-title {
             break-after: avoid;
             page-break-after: avoid;
             margin-bottom: 0.6rem;
         }
-        
-        .responsibilities, .job-responsibilities {
+
+        .responsibilities,
+        .job-responsibilities {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
-        .responsibilities li, .job-responsibilities li {
+
+        .responsibilities li,
+        .job-responsibilities li {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.2rem;
         }
-        
-        .skills-category, .skill-category {
+
+        .skills-category,
+        .skill-category {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.8rem;
@@ -607,44 +669,58 @@
                 columns: 2;
                 column-gap: 15mm;
                 column-fill: balance;
-            .section {
-                margin-bottom: 0.8rem;
-            .section {
-                margin-bottom: 0.8rem;
+
+                .section {
+                    margin-bottom: 0.8rem;
+
+                    .section {
+                        margin-bottom: 0.8rem;
+                    }
+
+                    .experience-item,
+                    .education-item,
+                    .project-item,
+                    .certification-item {
+                        margin-bottom: 0.6rem;
+                    }
+
+                    .responsibilities li,
+                    .job-responsibilities li {
+                        margin-bottom: 0.1rem;
+                    }
+                }
+
+                .experience-item,
+                .education-item,
+                .project-item,
+                .certification-item {
+                    margin-bottom: 0.6rem;
+                }
+
+                .responsibilities li,
+                .job-responsibilities li {
+                    margin-bottom: 0.1rem;
+                }
             }
-            .experience-item, .education-item, .project-item, .certification-item {
-                margin-bottom: 0.6rem;
-            }
-            .responsibilities li, .job-responsibilities li {
-                margin-bottom: 0.1rem;
-            }
-            }
-            .experience-item, .education-item, .project-item, .certification-item {
-                margin-bottom: 0.6rem;
-            }
-            .responsibilities li, .job-responsibilities li {
-                margin-bottom: 0.1rem;
-            }
-            }
-            
+
             .left-column,
             .right-column {
                 width: 100%;
                 padding: 0;
                 break-inside: avoid-column;
             }
-            
+
             .left-column {
                 background: #f8fafc;
                 padding: 8pt;
                 margin-bottom: 12pt;
             }
-            
+
             .right-column {
                 padding: 8pt 0;
             }
         }
-        
+
         /* Page numbering for multi-page resumes */
         /* Enhanced Page Break Handling */
         .section {
@@ -652,51 +728,57 @@
             page-break-inside: avoid;
             margin-bottom: 1rem;
         }
-        
-        .experience-item, .education-item, .project-item, .certification-item {
+
+        .experience-item,
+        .education-item,
+        .project-item,
+        .certification-item {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.8rem;
         }
-        
+
         .page-break-before-auto {
             break-before: auto;
             page-break-before: auto;
         }
-        
+
         .page-break-avoid {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
+
         .page-break-after-avoid {
             break-after: avoid;
             page-break-after: avoid;
         }
-        
+
         .header {
             break-after: avoid;
             page-break-after: avoid;
         }
-        
+
         .section-title {
             break-after: avoid;
             page-break-after: avoid;
             margin-bottom: 0.6rem;
         }
-        
-        .responsibilities, .job-responsibilities {
+
+        .responsibilities,
+        .job-responsibilities {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
-        .responsibilities li, .job-responsibilities li {
+
+        .responsibilities li,
+        .job-responsibilities li {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.2rem;
         }
-        
-        .skills-category, .skill-category {
+
+        .skills-category,
+        .skill-category {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.8rem;
@@ -708,51 +790,57 @@
             page-break-inside: avoid;
             margin-bottom: 1rem;
         }
-        
-        .experience-item, .education-item, .project-item, .certification-item {
+
+        .experience-item,
+        .education-item,
+        .project-item,
+        .certification-item {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.8rem;
         }
-        
+
         .page-break-before-auto {
             break-before: auto;
             page-break-before: auto;
         }
-        
+
         .page-break-avoid {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
+
         .page-break-after-avoid {
             break-after: avoid;
             page-break-after: avoid;
         }
-        
+
         .header {
             break-after: avoid;
             page-break-after: avoid;
         }
-        
+
         .section-title {
             break-after: avoid;
             page-break-after: avoid;
             margin-bottom: 0.6rem;
         }
-        
-        .responsibilities, .job-responsibilities {
+
+        .responsibilities,
+        .job-responsibilities {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
-        .responsibilities li, .job-responsibilities li {
+
+        .responsibilities li,
+        .job-responsibilities li {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.2rem;
         }
-        
-        .skills-category, .skill-category {
+
+        .skills-category,
+        .skill-category {
             break-inside: avoid;
             page-break-inside: avoid;
             margin-bottom: 0.8rem;
@@ -764,42 +852,57 @@
                     content: "Page " counter(page) " of " counter(pages);
                     font-size: 8pt;
                     color: #64748b;
-            .section {
-                margin-bottom: 0.8rem;
-            .section {
-                margin-bottom: 0.8rem;
-            }
-            .experience-item, .education-item, .project-item, .certification-item {
-                margin-bottom: 0.6rem;
-            }
-            .responsibilities li, .job-responsibilities li {
-                margin-bottom: 0.1rem;
-            }
-            }
-            .experience-item, .education-item, .project-item, .certification-item {
-                margin-bottom: 0.6rem;
-            }
-            .responsibilities li, .job-responsibilities li {
-                margin-bottom: 0.1rem;
-            }
+
+                    .section {
+                        margin-bottom: 0.8rem;
+
+                        .section {
+                            margin-bottom: 0.8rem;
+                        }
+
+                        .experience-item,
+                        .education-item,
+                        .project-item,
+                        .certification-item {
+                            margin-bottom: 0.6rem;
+                        }
+
+                        .responsibilities li,
+                        .job-responsibilities li {
+                            margin-bottom: 0.1rem;
+                        }
+                    }
+
+                    .experience-item,
+                    .education-item,
+                    .project-item,
+                    .certification-item {
+                        margin-bottom: 0.6rem;
+                    }
+
+                    .responsibilities li,
+                    .job-responsibilities li {
+                        margin-bottom: 0.1rem;
+                    }
                 }
             }
         }
-        
+
         /* Utility classes */
         .page-break-before {
             page-break-before: always;
         }
-        
+
         .text-center {
             text-align: center;
         }
-        
+
         .mb-large {
             margin-bottom: 1.5rem;
         }
     </style>
 </head>
+
 <body>
     <div class="resume-container">
         <!-- Left Column -->
@@ -848,7 +951,12 @@
             <section class="left-section">
                 <h2 class="left-section-title">Skills</h2>
                 <div class="skills-container">
-                    {{{skills}}}
+                    {{#each skills}}
+                    <div class="skills-category">
+                        <h4 class="skills-title">{{{category}}}</h4>
+                        <p class="skills-list">{{{items}}}</p>
+                    </div>
+                    {{/each}}
                 </div>
             </section>
             {{/if}}
@@ -931,4 +1039,5 @@
         </div>
     </div>
 </body>
+
 </html>
