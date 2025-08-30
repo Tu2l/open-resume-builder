@@ -23,9 +23,12 @@ import type { ResumeFormValues } from '../lib/schema';
 export function renderSimpleTemplate(template: string, data: ResumeFormValues): string {
   // Notice - homegrown logic is replaced with handlebars.js to make it compatible with universal templates
   // Transform skills string into structured data for template compatibility
+  // Check if template contains skills iteration before transforming
+  const needsSkillsTransformation = template.includes('{{#each skills}}');
+  
   const transformedData = {
     ...data,
-    skills: data.skills ? data.skills.split(';').map(category => {
+    skills: needsSkillsTransformation && data.skills ? data.skills.split(';').map(category => {
       const [categoryName, skillsList] = category.split(':');
 
       // Handle non-categorized skills (no colon separator)
@@ -43,7 +46,7 @@ export function renderSimpleTemplate(template: string, data: ResumeFormValues): 
         category: categoryName.trim(),
         items: skillsList.trim()
       };
-    }).filter(Boolean) : []
+    }).filter(Boolean) : data.skills
   };
   const mappedTemplate = Handlebars.compile(template);
   return mappedTemplate(transformedData);
