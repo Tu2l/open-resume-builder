@@ -21,22 +21,32 @@ import type { ResumeFormValues } from '../lib/schema';
  * @returns {string} The rendered HTML string.
  */
 export function renderSimpleTemplate(template: string, data: ResumeFormValues): string {
-    // Notice - homegrown logic is replaced with handlebars.js to make it compatible with universal templates
-    // Transform skills string into structured data for template compatibility
-    const transformedData = {
-      ...data,
-      skills: data.skills ? data.skills.split(';').map(category => {
-        const [categoryName, skillsList] = category.split(':');
-        if (!categoryName || !skillsList) return null;
-        
+  // Notice - homegrown logic is replaced with handlebars.js to make it compatible with universal templates
+  // Transform skills string into structured data for template compatibility
+  const transformedData = {
+    ...data,
+    skills: data.skills ? data.skills.split(';').map(category => {
+      const [categoryName, skillsList] = category.split(':');
+
+      // Handle non-categorized skills (no colon separator)
+      if (!skillsList) {
         return {
-          category: categoryName.trim(),
-          items: skillsList.trim()
+          category: '', // empty category for non-categorized skills
+          items: categoryName.trim()
         };
-      }).filter(Boolean) : []
-    };
-    const mappedTemplate = Handlebars.compile(template);
-    return mappedTemplate(transformedData);
+      }
+
+      // Handle categorized skills (with colon separator)
+      if (!categoryName || !skillsList) return null;
+
+      return {
+        category: categoryName.trim(),
+        items: skillsList.trim()
+      };
+    }).filter(Boolean) : []
+  };
+  const mappedTemplate = Handlebars.compile(template);
+  return mappedTemplate(transformedData);
 }
 
 
@@ -48,11 +58,11 @@ export function renderSimpleTemplate(template: string, data: ResumeFormValues): 
  * @returns {string} A plain text representation of the resume.
  */
 export const getResumeAsPlainText = (data: ResumeFormValues): string => {
-    const responsibilitiesToString = (responsibilities: string[]) => {
-        return (responsibilities || []).map(r => `- ${r}`).join('\n');
-    }
-    
-    return `
+  const responsibilitiesToString = (responsibilities: string[]) => {
+    return (responsibilities || []).map(r => `- ${r}`).join('\n');
+  }
+
+  return `
       ${data.fullName}
       ${data.email} | ${data.phone}
       ${data.website ? `Website: ${data.website}` : ''}
