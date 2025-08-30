@@ -6,6 +6,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input';
 import { Trash2, PlusCircle } from 'lucide-react';
 import { ResumeFormValues } from '@/lib/schema';
+import { Textarea } from '../ui/textarea';
 
 interface ProjectsStepProps {
   form: UseFormReturn<ResumeFormValues>;
@@ -41,7 +42,11 @@ export default function ProjectsStep({ form }: ProjectsStepProps) {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Built a full-stack e-commerce platform..." value={field.value ?? ''} />
+                  <Textarea
+                    {...field}
+                    className='h-32'
+                    placeholder="Built a full-stack e-commerce platform..."
+                    value={field.value ?? ''} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -73,11 +78,11 @@ export default function ProjectsStep({ form }: ProjectsStepProps) {
               </FormItem>
             )}
           />
-          <Button 
-            type="button" 
-            variant="destructive" 
-            size="sm" 
-            onClick={() => remove(index)} 
+          <Button
+            type="button"
+            variant="destructive"
+            size="sm"
+            onClick={() => remove(index)}
             className="absolute -top-3 -right-3 h-7 w-7 rounded-full p-0"
           >
             <Trash2 className="h-4 w-4" />
@@ -87,11 +92,11 @@ export default function ProjectsStep({ form }: ProjectsStepProps) {
       <Button
         type="button"
         variant="outline"
-        onClick={() => append({ 
-          name: '', 
-          description: '', 
-          technologies: '', 
-          url: '' 
+        onClick={() => append({
+          name: '',
+          description: '',
+          technologies: '',
+          url: ''
         })}
       >
         <PlusCircle className="mr-2 h-4 w-4" /> Add Project

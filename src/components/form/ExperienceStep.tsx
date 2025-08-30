@@ -6,6 +6,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input';
 import { Trash2, PlusCircle } from 'lucide-react';
 import { ResumeFormValues } from '@/lib/schema';
+import { Textarea } from '../ui/textarea';
 
 interface ExperienceStepProps {
   form: UseFormReturn<ResumeFormValues>;
@@ -97,22 +98,26 @@ export default function ExperienceStep({ form }: ExperienceStepProps) {
               <FormItem>
                 <FormLabel>Key Responsibilities</FormLabel>
                 <FormControl>
-                  <Input 
-                    {...field} 
-                    placeholder="Led a team of 5 engineers in developing a new feature" 
-                    value={field.value ? field.value[0] : ''} 
-                    onChange={(e) => field.onChange([e.target.value])}
+                  <Textarea
+                  {...field}
+                  className="h-32"
+                  placeholder="Led a team of 5 engineers in developing a new feature"
+                  value={field.value ? field.value.join('\n') : ''}
+                  onChange={(e) => {
+                    const lines = e.target.value.split('\n');
+                    field.onChange(lines);
+                  }}
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button 
-            type="button" 
-            variant="destructive" 
-            size="sm" 
-            onClick={() => remove(index)} 
+          <Button
+            type="button"
+            variant="destructive"
+            size="sm"
+            onClick={() => remove(index)}
             className="absolute -top-3 -right-3 h-7 w-7 rounded-full p-0"
           >
             <Trash2 className="h-4 w-4" />
@@ -122,13 +127,13 @@ export default function ExperienceStep({ form }: ExperienceStepProps) {
       <Button
         type="button"
         variant="outline"
-        onClick={() => append({ 
-          company: '', 
-          location: '', 
-          title: '', 
-          startDate: '', 
-          endDate: '', 
-          responsibilities: [''] 
+        onClick={() => append({
+          company: '',
+          location: '',
+          title: '',
+          startDate: '',
+          endDate: '',
+          responsibilities: ['']
         })}
       >
         <PlusCircle className="mr-2 h-4 w-4" /> Add Experience
