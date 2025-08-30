@@ -203,7 +203,20 @@ export default function HomePage() {
                 setAppState({ step: 'result' });
             })
             .catch(err => {
-                const errorMessage = err.message || 'An unexpected error occurred.';
+                const errorMessage = `Failed to generate resume: ${err.message}`;
+                toast({ variant: 'destructive', title: 'Error', description: errorMessage });
+            });
+    }
+
+     const generateEnhancedResumeFromTemplate = (selectedTemplate: ResumeTemplate, validatedData: ResumeFormValues, jobDescriptionText: string, analysisResult: string) => {
+        selectedTemplate.html
+            .then(templateHtml => {
+                const html = renderSimpleTemplate(templateHtml, validatedData);
+                setEnhancedResumeHtml(html);
+                setAppState({ step: 'result', jobDescription: jobDescriptionText, analysis: analysisResult });
+            })
+            .catch(err => {
+                const errorMessage = `Failed to generate resume: ${err.message}`;
                 toast({ variant: 'destructive', title: 'Error', description: errorMessage });
             });
     }
@@ -253,18 +266,6 @@ export default function HomePage() {
         } finally {
             setIsLoading(false);
         }
-    }
-
-    const generateEnhancedResumeFromTemplate = (selectedTemplate: ResumeTemplate, validatedData: ResumeFormValues, jobDescriptionText: string, analysisResult: string) => {
-        selectedTemplate.html
-            .then(templateHtml => {
-                const html = renderSimpleTemplate(templateHtml, validatedData);
-                setEnhancedResumeHtml(html);
-                setAppState({ step: 'result', jobDescription: jobDescriptionText, analysis: analysisResult });
-            })
-            .catch(err => {
-                throw new Error(`Failed to load template: ${err.message}`);
-            });
     }
 
     const handleRevert = () => {
