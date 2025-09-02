@@ -12,7 +12,6 @@ import availableModels from '@/lib/ai/gemini_models.json';
 import { jobDescriptionSchema, resumeFormSchema, type JobDescriptionValues, type ResumeFormValues } from '@/lib/schema';
 import { getResumeAsPlainText, renderSimpleTemplate } from '@/templates/template-helpers';
 
-// Form Step Components
 import ErrorView from '@/components/form/ErrorView';
 import FormStepsContainer from '@/components/form/FormStepsContainer';
 import LoadingView from '@/components/form/LoadingView';
@@ -25,14 +24,6 @@ import PopDialog from '@/components/PopDialog';
 import { AppState } from '../lib/AppState';
 import HeaderToolbar from '@/components/HeaderToolbar';
 import { TooltipProvider } from '@/components/ui/tooltip';
-
-import dynamic from 'next/dynamic';
-
-const DynamicComponentWithNoSSR = dynamic(
-    () => import('html2pdf.js'),
-    { ssr: false }
-);
-
 
 /**
  * Defines the sequence of steps in the resume creation form.
@@ -314,8 +305,24 @@ export default function HomePage() {
             }
         };
         reader.readAsText(file);
-    }
+    };  
 
+
+    const handlePrint = () => {
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+            toast({ variant: 'destructive', title: 'Error', description: 'Could not open print window. Please check your popup blocker.' });
+            return;
+        }
+
+        printWindow.document.documentElement.innerHTML = editedHtml;
+        
+        setTimeout(() => {
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        }, 100);
+    };
 
     const generatePdf = async () => {
         try {
@@ -359,7 +366,7 @@ export default function HomePage() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'resume.html';
+        a.download = `${resumeForm.getValues().fullName.replaceAll(" ", "_")}_resume.html`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -463,7 +470,7 @@ export default function HomePage() {
                     enhancedResumeHtml={enhancedResumeHtml}
                     handleExport={handleExport}
                     handleDownloadHtml={handleDownloadHtml}
-                    handlePrint={generatePdf}
+                    handlePrint={handlePrint}
                     handleBackHome={() => setAppState({ step: 'welcome' })}
                 />
 
