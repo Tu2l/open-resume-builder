@@ -320,7 +320,7 @@ export default function HomePage() {
         setTimeout(() => {
             printWindow.focus();
             printWindow.print();
-            printWindow.close();
+            // printWindow.close();
         }, 100);
     };
 
