@@ -218,6 +218,7 @@ export default function HomePage() {
         const { apiKey, jobDescriptionText, model } = data;
         const resumeData = resumeForm.getValues();
         const resumePlainText = getResumeAsPlainText(resumeData);
+        debugger
 
         try {
             // Step 1: Get AI Analysis
@@ -238,10 +239,11 @@ export default function HomePage() {
             const generationResultJson = extractJsonFromResponse(generationResultText);
 
             const validatedData = resumeFormSchema.parse(generationResultJson);
+            validatedData.template = resumeData.template; // Keep using the same template
             const templates = await getTemplates();
-            const selectedTemplate = templates.find(t => t.id === resumeData.template);
+            const selectedTemplate = templates.find(t => t.id === validatedData.template);
             if (!selectedTemplate) {
-                throw new Error(`Template '${resumeData.template}' is not available after enhancement. Please try a different template.`);
+                throw new Error(`Template '${validatedData.template}' is not available after enhancement. Please try a different template.`);
             }
 
             resumeForm.reset(validatedData);
