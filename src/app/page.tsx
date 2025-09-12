@@ -238,11 +238,10 @@ export default function HomePage() {
             const generationResultJson = extractJsonFromResponse(generationResultText);
 
             const validatedData = resumeFormSchema.parse(generationResultJson);
-
             const templates = await getTemplates();
-            const selectedTemplate = templates.find(t => t.id === validatedData.template);
+            const selectedTemplate = templates.find(t => t.id === resumeData.template);
             if (!selectedTemplate) {
-                throw new Error(`Template '${validatedData.template}' is not available after enhancement. Please try a different template.`);
+                throw new Error(`Template '${resumeData.template}' is not available after enhancement. Please try a different template.`);
             }
 
             resumeForm.reset(validatedData);
