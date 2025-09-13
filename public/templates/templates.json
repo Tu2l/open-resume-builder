@@ -25,54 +25,6 @@
       ]
     },
     {
-      "id": "creative",
-      "name": "Creative",
-      "description": "Artistic template for creative professionals",
-      "category": "general",
-      "thumbnail": "creative.svg",
-      "features": [
-        "Colorful design",
-        "Creative elements",
-        "Portfolio-friendly"
-      ]
-    },
-    {
-      "id": "minimalist",
-      "name": "Minimalist",
-      "description": "Clean and simple design with maximum readability",
-      "category": "general",
-      "thumbnail": "minimalist.svg",
-      "features": [
-        "Minimal design",
-        "Excellent readability",
-        "Clean lines"
-      ]
-    },
-    {
-      "id": "technical",
-      "name": "Technical",
-      "description": "Developer-focused template with code aesthetics",
-      "category": "general",
-      "thumbnail": "technical.svg",
-      "features": [
-        "Tech-focused",
-        "Code-style fonts",
-        "Developer-friendly"
-      ]
-    },
-    {
-      "id": "two-column",
-      "name": "Two Column",
-      "description": "Space-efficient layout with sidebar",
-      "category": "general",
-      "thumbnail": "two-column.svg",
-      "features": [
-        "Two-column layout",
-        "Space efficient",
-        "Sidebar design"
-      ]
-    },
-    {
       "id": "compact",
       "name": "Compact",
       "description": "Optimized for maximum content in minimal space",

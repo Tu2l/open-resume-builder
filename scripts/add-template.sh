@@ -173,7 +173,7 @@ cat > "$HTML_FILE" << EOF
         <header class="header">
             <h1>{{{fullName}}}</h1>
             <div class="contact-info">
-                <div>{{{email}}} | {{{phone}}}</div>
+                <div>{{{email}}} | {{{phone}}} #if{{location}}| {{{location}}}</div>
                 {{#if website}}<div><a href="{{{website}}}">{{{website}}}</a></div>{{/if}}
                 {{#if linkedin}}<div><a href="{{{linkedin}}}">LinkedIn</a></div>{{/if}}
                 {{#if github}}<div><a href="{{{github}}}">GitHub</a></div>{{/if}}

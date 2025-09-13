@@ -49,26 +49,6 @@ This directory contains automation scripts for managing the resume template syst
 - Removes configuration entry from JSON
 - Shows confirmation before deletion
 
-## Utility Scripts
-
-### `clean_templates.sh`
-**Purpose**: Clean up template files and optimize storage
-- Removes temporary files
-- Optimizes file sizes
-- Cleans up backup files
-
-### `optimize_templates.sh`
-**Purpose**: Optimize template performance and file sizes
-- Minifies HTML templates
-- Optimizes SVG thumbnails
-- Compresses assets
-
-### `analyze_templates.sh`
-**Purpose**: Analyze template usage and performance
-- Reports template statistics
-- Analyzes file sizes
-- Provides system health metrics
-
 ## Usage Workflow
 
 ### Adding a New Template
@@ -96,31 +76,12 @@ This directory contains automation scripts for managing the resume template syst
 # Regular validation
 ./validate-templates.sh
 
-# Clean up temporary files
-./clean_templates.sh
-
-# Optimize for performance
-./optimize_templates.sh
-
-# Get system statistics
-./analyze_templates.sh
-```
-
 ## Script Requirements
 
 All scripts require:
 - Bash shell
 - Read/write access to `public/templates/` directory
 - `jq` command for JSON processing (for some scripts)
-
-## Error Handling
-
-All scripts include:
-- Input validation
-- File existence checks
-- Backup creation before modifications
-- Rollback capabilities on failure
-- Clear error messages and guidance
 
 ## Integration
 
