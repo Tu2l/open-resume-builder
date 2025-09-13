@@ -2,7 +2,7 @@
 
 This document outlines the technical architecture and design of the Open Resume Builder application.
 
-## 1. Core Philosophy
+## Core Philosophy
 
 - **Client-Centric**: The application performs all major data processing and AI interactions on the client-side. This minimizes server load, reduces complexity, and keeps user data (including API keys) within the browser.
 - **Component-Based UI**: Built with React and `shadcn/ui`, promoting a modular, reusable, and maintainable user interface.
@@ -10,7 +10,7 @@ This document outlines the technical architecture and design of the Open Resume 
 - **Dynamic Configuration**: Templates and thumbnails are loaded dynamically from JSON configuration and asset files, enabling unlimited template expansion without code changes.
 - **Async Architecture**: All template loading operations use async/await patterns for optimal performance and user experience.
 
-## 2. Architecture Overview
+## Architecture Overview
 
 ### Frontend
 
@@ -42,7 +42,7 @@ This document outlines the technical architecture and design of the Open Resume 
 - **Security**: The user's Gemini API key is managed in the client's state and is never stored on a server. It is passed directly to the Gemini API with each request.
 - **Prompting**: Prompts are constructed as strings on the client, embedding the user's resume data and the target job description.
 
-## 3. Application Flow
+## Application Flow
 
 1.  **Welcome**: The user starts at a welcome screen and can either begin a new resume or import existing data from a JSON file.
 2.  **Template Selection**: The user chooses from 13 visual templates organized by category (traditional, modern, creative, professional, specialized). Templates are loaded dynamically with real-time thumbnail previews.
@@ -53,7 +53,7 @@ This document outlines the technical architecture and design of the Open Resume 
     - **Edit HTML**: Manually edit the resume's HTML for fine-grained control.
     - **Download/Print**: Export the resume data as JSON or download the final HTML.
 
-## 8. Template System
+## Template System
 
 The application features a **fully dynamic template system** with zero hardcoded components. See [`TEMPLATE_SYSTEM.md`](./TEMPLATE_SYSTEM.md) for complete documentation.
 
@@ -72,7 +72,7 @@ Quick example:
 
 This enables unlimited template expansion without requiring code changes or deployment.
 
-## 5. Technical Implementation
+## Technical Implementation
 
 The application uses:
 
@@ -95,7 +95,7 @@ The application uses:
 - **Templates Index**: Async template loading functions organized by category
 - **Management Scripts**: Automation tools for template lifecycle management
 
-## 6. Key Files and Directories
+## Key Files and Directories
 
 - **`src/app/page.tsx`**: The core of the application logic and UI.
 - **`src/app/globals.css`**: Global styles and Tailwind CSS configuration.
