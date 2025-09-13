@@ -35,6 +35,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+  
   .dark {
     --background: 224 71.4% 4.1%;
     --foreground: 150 11% 95%;
@@ -62,21 +63,50 @@ body {
   * {
     @apply border-border;
   }
+  
+  html {
+    /* Smooth theme transitions */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
   body {
     @apply bg-background text-foreground;
+    /* Enable smooth transitions for theme changes */
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
+  
+  /* Add transitions only to common UI elements, not everything */
+  [class*="bg-"], [class*="border-"], [class*="text-"] {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Resume preview container should respect theme */
   .resume-preview-container {
     @apply p-4 bg-background;
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    /* Ensure container respects theme transitions */
+    transition: background-color 0.3s ease;
   }
+  
+  /* Only the actual resume document stays white for print/export */
   .resume-preview {
-      color: hsl(var(--foreground));
-      width: 210mm; /* A4 width */
-      min-height: 297mm; /* A4 height */
-      margin: 0 auto;
-      background: white;
-      overflow: hidden;
+    color: #333; /* Fixed dark color for resume text readability */
+    width: 210mm; /* A4 width */
+    min-height: 297mm; /* A4 height */
+    margin: 0 auto;
+    background: white !important; /* Always white for resume content */
+    overflow: hidden;
+    /* Ensure resume content doesn't transition colors */
+    transition: none;
+    /* Add shadow to distinguish from background */
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    border-radius: 4px;
+  }
+  
+  /* Force resume content to stay readable with consistent colors */
+  .resume-preview * {
+    transition: none;
   }
 }

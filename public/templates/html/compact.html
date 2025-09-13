@@ -226,9 +226,7 @@
         .resume-container {
             width: 210mm;
             max-width: 210mm;
-            /* margin: 0 auto; */
-            /* background: white; */
-            /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+            margin: 0 auto;
             min-height: 297mm;
             padding-left: 5mm;
             padding-right: 5mm;
@@ -528,11 +526,11 @@
                 {{#if phone}}<span class="contact-separator">•</span>
                 <span>{{{phone}}}</span>{{/if}}
                 {{#if website}}<span class="contact-separator">•</span>
-                <a href="{{{website}}}">{{{website}}}</a>{{/if}}
+                <a href="{{{website}}}" target="_blank">{{{website}}}</a>{{/if}}
                 {{#if linkedin}}<span class="contact-separator">•</span>
-                <a href="{{{linkedin}}}">LinkedIn</a>{{/if}}
+                <a href="{{{linkedin}}}" target="_blank">LinkedIn</a>{{/if}}
                 {{#if github}}<span class="contact-separator">•</span>
-                <a href="{{{github}}}">GitHub</a>{{/if}}
+                <a href="{{{github}}}" target="_blank">GitHub</a>{{/if}}
             </div>
         </header>
 

@@ -98,11 +98,13 @@ export default function ResultStep({
                     className="h-[70vh] w-full resize-none font-mono text-xs"
                   />
                 ) : (
-                  <ScrollArea className="h-[70vh] w-full rounded-md border bg-muted">
                     <div className="resume-preview-container">
-                      <div className="resume-preview" dangerouslySetInnerHTML={{ __html: editedHtml }} />
+                      <iframe
+                        srcDoc= {editedHtml}
+                        className="w-full h-[100vh] border-0 resume-preview"
+                        sandbox="allow-same-origin"
+                      />
                     </div>
-                  </ScrollArea>
                 )}
               </div>
             </div>
