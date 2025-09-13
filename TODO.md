@@ -1,9 +1,9 @@
 ## TODO - Add 
- - refactor App name from Resume Helper to Open Resume Builder
+ - refactor App name from Resume Helper to Open Resume Builder - done
  - release notes
  - change log 
- - application version
- - location info in personal info form
+ - application version - done
+ - location info in personal info form - done
  - landing page
  - configure 
     - AI settings

@@ -1,6 +1,6 @@
-# Resume AI
+# Open Resume Builder
 
-Resume AI is a modern, web-based application designed to help users create, manage, and enhance their resumes with the power of generative AI. Built with Next.js and leveraging the Google Gemini API, this tool provides a seamless, client-side experience for crafting professional resumes tailored to specific job descriptions.
+Open Resume Builder is a modern, web-based application designed to help users create, manage, and enhance their resumes with the power of generative AI. Built with Next.js and leveraging the Google Gemini API, this tool provides a seamless, client-side experience for crafting professional resumes tailored to specific job descriptions.
 
 ## Core Features
 

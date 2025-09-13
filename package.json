@@ -1,6 +1,7 @@
 {
-  "name": "nextn",
-  "version": "0.1.0",
+  "simpleName":"Open Resume Builder",
+  "name": "open_resume_builder",
+  "version": "2025.09",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack -p 9002",

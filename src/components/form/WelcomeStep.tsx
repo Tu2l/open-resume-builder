@@ -13,8 +13,8 @@ export default function WelcomeStep({ setAppState, importFileInputRef, handleImp
     return (
         <Card className="shadow-lg w-full max-w-lg">
             <CardHeader className="text-center">
-                <CardTitle className="text-3xl">Resume AI</CardTitle>
-                <CardDescription>Create a professional resume in minutes.</CardDescription>
+                <CardTitle className="text-3xl">Nice to meet you</CardTitle>
+                <CardDescription>Click on the bellow button to create a professional resume in minutes.</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
                 <Button onClick={() => setAppState({ step: 'template' })} variant="default" size="lg">

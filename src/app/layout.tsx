@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Resume AI',
+  title: `${process.env.APP_NAME}`,
   description: 'AI-Powered Resume Creator',
   icons: {
     icon: [

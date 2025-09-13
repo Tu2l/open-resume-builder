@@ -1,6 +1,6 @@
 {
-  "name": "Resume AI",
-  "short_name": "Resume AI",
+  "name": "Open Resume Builder",
+  "short_name": "Open Resume Builder",
   "description": "AI-Powered Resume Creator",
   "start_url": "/",
   "display": "standalone",

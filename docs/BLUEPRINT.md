@@ -1,6 +1,6 @@
-# Resume AI - Project Blueprint
+# Open Resume Builder - Project Blueprint
 
-This document outlines the technical architecture and design of the Resume AI application.
+This document outlines the technical architecture and design of the Open Resume Builder application.
 
 ## 1. Core Philosophy
 
