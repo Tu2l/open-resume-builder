@@ -1,6 +1,6 @@
 'use client';
 
-import { UseFormReturn } from 'react-hook-form';
+import { Form, UseFormReturn } from 'react-hook-form';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { ResumeFormValues } from '@/lib/schema';
@@ -19,7 +19,7 @@ export default function ContactStep({ form }: ContactStepProps) {
           <FormItem>
             <FormLabel>Full Name</FormLabel>
             <FormControl>
-              <Input placeholder="John Doe" {...field} value={field.value ?? ''} />
+              <Input placeholder="Your Name" {...field} value={field.value ?? ''} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -32,7 +32,7 @@ export default function ContactStep({ form }: ContactStepProps) {
           <FormItem>
             <FormLabel>Email</FormLabel>
             <FormControl>
-              <Input placeholder="john@example.com" {...field} value={field.value ?? ''} />
+              <Input placeholder="yourname@example.com" {...field} value={field.value ?? ''} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -43,14 +43,27 @@ export default function ContactStep({ form }: ContactStepProps) {
         name="phone"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Phone (Optional)</FormLabel>
+            <FormLabel>Phone</FormLabel>
             <FormControl>
-              <Input placeholder="+1 234 567 8900" {...field} value={field.value ?? ''} />
+              <Input placeholder="+911234567890" {...field} value={field.value ?? ''} />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
+      <FormField
+        control={form.control}
+        name="location"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Current Location</FormLabel>
+           <FormControl>
+             <Input placeholder="City, State, Country" {...field} value={field.value ?? ''} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />  
       <FormField
         control={form.control}
         name="website"
@@ -71,7 +84,7 @@ export default function ContactStep({ form }: ContactStepProps) {
           <FormItem>
             <FormLabel>LinkedIn (Optional)</FormLabel>
             <FormControl>
-              <Input placeholder="https://linkedin.com/in/johndoe" {...field} value={field.value ?? ''} />
+              <Input placeholder="https://linkedin.com/in/yourname" {...field} value={field.value ?? ''} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -84,7 +97,7 @@ export default function ContactStep({ form }: ContactStepProps) {
           <FormItem>
             <FormLabel>GitHub (Optional)</FormLabel>
             <FormControl>
-              <Input placeholder="https://github.com/johndoe" {...field} value={field.value ?? ''} />
+              <Input placeholder="https://github.com/yourname" {...field} value={field.value ?? ''} />
             </FormControl>
             <FormMessage />
           </FormItem>

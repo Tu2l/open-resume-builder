@@ -126,7 +126,7 @@ export default function HomePage() {
 
         let isValid = false;
         switch (appState.currentFormStep) {
-            case 0: isValid = await triggerValidation(['fullName', 'email', 'phone', 'website', 'linkedin', 'github']); break;
+            case 0: isValid = await triggerValidation(['fullName', 'email', 'phone','location', 'website', 'linkedin', 'github']); break;
             case 1: isValid = await triggerValidation(['summary']); break;
             case 2: isValid = await triggerValidation(['experience']); break;
             case 3: isValid = await triggerValidation(['projects']); break;
@@ -277,7 +277,7 @@ export default function HomePage() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${data.fullName.replace(' ', '_')}_resume_data.json`;
+        a.download = `${data.fullName.replace(' ', '_')}_${new Date().toISOString().slice(0, 10)}_resume_data.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

@@ -11,9 +11,10 @@ import * as z from 'zod';
  * Zod schema for validating the main resume form.
  */
 export const resumeFormSchema = z.object({
-    fullName: z.string().min(1, "Full name is required."),
+    fullName: z.string().min(3, "Full name is required."),
     email: z.string().email("Invalid email address."),
-    phone: z.string().min(1, "Phone number is required."),
+    phone: z.string().min(10, "Phone number is required."),
+    location: z.string().min(3, "Location is required."),
     website: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
     linkedin: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
     github: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),

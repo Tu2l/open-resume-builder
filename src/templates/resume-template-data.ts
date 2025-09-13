@@ -60,7 +60,7 @@ export const templates: Promise<ResumeTemplate[]> = getTemplates();
  * properly, preventing issues with uncontrolled components in React.
  */
 export const resumeFormDefaultValues: ResumeFormValues = {
-  fullName: '', email: '', phone: '', website: '', linkedin: '', github: '', summary: '',
+  fullName: '', email: '', phone: '', location: '', website: '', linkedin: '', github: '', summary: '',
   experience: [{ company: '', location: '', title: '', startDate: '', endDate: '', responsibilities: [''] }],
   projects: [{ name: '', description: '', technologies: '', url: '' }],
   education: [{ institution: '', location: '', degree: '', graduationDate: '' }],
@@ -73,62 +73,63 @@ export const resumeFormDefaultValues: ResumeFormValues = {
  * Pre-filled sample data for the resume form. Useful for testing and demonstrations.
  */
 export const testData: ResumeFormValues = {
-  fullName: 'Jane Doe',
-  email: 'jane.doe@example.com',
-  phone: '123-456-7890',
-  website: 'https://janedoe.dev',
-  linkedin: 'https://linkedin.com/in/janedoe',
-  github: 'https://github.com/janedoe',
-  summary: 'A passionate and creative professional with experience in project management and user-centric design. Eager to contribute to a collaborative team and build innovative solutions.',
+  fullName: 'Arjun Sharma',
+  email: 'arjun.sharma@example.com',
+  phone: '+91-9876543210',
+  location: 'Bangalore, Karnataka, India',
+  website: 'https://arjunsharma.dev',
+  linkedin: 'https://linkedin.com/in/arjunsharma',
+  github: 'https://github.com/arjunsharma',
+  summary: 'A passionate and innovative software engineer with experience in full-stack development and AI/ML solutions. Eager to contribute to cutting-edge technology projects and build scalable applications.',
   experience: [
     {
-      company: 'Tech Solutions Inc.',
-      location: 'New York, NY',
-      title: 'Project Manager',
-      startDate: 'Jan 2021',
+      company: 'Infosys Limited',
+      location: 'Bangalore, Karnataka',
+      title: 'Senior Software Engineer',
+      startDate: 'Jul 2022',
       endDate: 'Present',
       responsibilities: [
-        'Led a team of 10 to deliver a new enterprise software product on time and under budget.',
-        'Managed project timelines, resources, and stakeholder communications.',
-        'Improved project delivery efficiency by 15% by implementing Agile methodologies.'
+        'Led development of microservices architecture serving 10M+ users for a fintech application.',
+        'Optimized database queries and API performance, reducing response time by 40%.',
+        'Mentored junior developers and implemented CI/CD pipelines using Jenkins and Docker.'
       ],
     },
     {
-      company: 'Innovate Co.',
-      location: 'San Francisco, CA',
-      title: 'UX Designer',
-      startDate: 'Jun 2018',
-      endDate: 'Dec 2020',
+      company: 'Tata Consultancy Services',
+      location: 'Mumbai, Maharashtra',
+      title: 'Software Developer',
+      startDate: 'Aug 2020',
+      endDate: 'Jun 2022',
       responsibilities: [
-        'Designed and prototyped user interfaces for mobile and web applications.',
-        'Conducted user research and usability testing to inform design decisions.',
-        'Collaborated with developers to ensure faithful implementation of designs.'
+        'Developed and maintained React.js applications for banking sector clients.',
+        'Collaborated with cross-functional teams to deliver features using Agile methodology.',
+        'Implemented automated testing suites, improving code coverage by 85%.'
       ],
     },
   ],
   education: [
     {
-      institution: 'State University',
-      location: 'New York, NY',
-      degree: 'B.S. in Business Administration',
-      graduationDate: 'May 2018',
+      institution: 'Indian Institute of Technology (IIT) Delhi',
+      location: 'New Delhi, India',
+      degree: 'B.Tech in Computer Science and Engineering',
+      graduationDate: 'May 2020',
     },
   ],
-  skills: 'Project Management: Agile, Scrum, Jira; Design: Figma, Sketch, Adobe XD; Communication: Stakeholder Management, Public Speaking',
+  skills: 'Programming Languages: JavaScript, Python, Java, TypeScript; Frameworks: React.js, Node.js, Express.js, Django; Databases: MongoDB, PostgreSQL, MySQL; Cloud: AWS, Azure; Tools: Git, Docker, Kubernetes',
   projects: [
     {
-      name: 'E-commerce Website Redesign',
-      description: 'Led the complete redesign of an e-commerce platform, resulting in a 30% increase in user conversion rates.',
-      technologies: 'Figma, User Testing, A/B Testing',
-      url: 'https://example-project.com',
+      name: 'Smart Agriculture IoT Platform',
+      description: 'Built an IoT-based platform for precision farming using sensor data analytics, helping farmers increase crop yield by 25%.',
+      technologies: 'React.js, Node.js, MongoDB, AWS IoT, Python',
+      url: 'https://github.com/arjunsharma/smart-agriculture',
     },
   ],
   certifications: [
     {
-      name: 'Certified ScrumMaster (CSM)',
-      issuer: 'Scrum Alliance',
-      date: '2021',
-      url: 'https://verify-cert.com/12345',
+      name: 'AWS Certified Solutions Architect',
+      issuer: 'Amazon Web Services',
+      date: '2023',
+      url: 'https://aws.amazon.com/verification',
     },
   ],
   template: 'modern',
