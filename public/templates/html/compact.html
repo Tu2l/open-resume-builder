@@ -528,9 +528,9 @@
                 {{#if website}}<span class="contact-separator">•</span>
                 <a href="{{{website}}}" target="_blank">{{{website}}}</a>{{/if}}
                 {{#if linkedin}}<span class="contact-separator">•</span>
-                <a href="{{{linkedin}}}" target="_blank">LinkedIn</a>{{/if}}
+                <a href="{{{linkedin}}}" target="_blank">{{{linkedin}}}</a>{{/if}}
                 {{#if github}}<span class="contact-separator">•</span>
-                <a href="{{{github}}}" target="_blank">GitHub</a>{{/if}}
+                <a href="{{{github}}}" target="_blank">{{{github}}}</a>{{/if}}
             </div>
         </header>
 
@@ -596,7 +596,7 @@
             {{#each projects}}
             <div class="project-item page-break-avoid">
                 <h3 class="project-name">
-                    {{#if url}}<a href="{{{url}}}">{{{name}}}</a>{{else}}{{{name}}}{{/if}}
+                    {{#if url}}<a href="{{{url}}}" target="_blank">{{{name}}}</a>{{else}}{{{name}}}{{/if}}
                 </h3>
                 {{#if description}}<p class="project-description">{{{description}}}</p>{{/if}}
                 {{#if technologies}}<span class="project-technologies">{{{technologies}}}</span>{{/if}}
@@ -615,7 +615,7 @@
                 <div class="certification-details">
                     <div>
                         {{#if issuer}}<div class="certification-issuer">{{{issuer}}}</div>{{/if}}
-                        {{#if url}}<div class="certification-url"><a href="{{{url}}}">View Certificate</a></div>{{/if}}
+                        {{#if url}}<div class="certification-url"><a href="{{{url}}}" target="_blank">View Certificate</a></div>{{/if}}
                     </div>
                     {{#if date}}<div class="certification-date">{{{date}}}</div>{{/if}}
                 </div>
