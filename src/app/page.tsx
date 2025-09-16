@@ -422,7 +422,7 @@ export default function HomePage() {
                     enhancedResumeHtml={enhancedResumeHtml}
                     analysis={appState.step === 'result' ? appState.analysis : undefined}
                     onBackToEdit={() => setAppState({ step: 'form', currentFormStep: formSteps.length - 1 })}
-                    onStartNewResume={() => setAppState({ step: 'welcome' })}
+                    onStartNewResume={handleResetForm}
                     onRevert={handleRevert}
                     onEditHtml={() => setIsEditingHtml(true)}
                     onSaveHtml={handleSaveHtml}
