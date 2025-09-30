@@ -26,7 +26,8 @@ const nextConfig: NextConfig = {
     PACKAGE_NAME: packageJson.name,
     APP_NAME: packageJson.simpleName,
     APP_VERSION: packageJson.version,
-  }
+  },
+  output: 'export'
 };
 
 export default nextConfig;
