@@ -5,24 +5,28 @@ This directory contains automation scripts for managing the resume template syst
 ## Release Management
 
 ### `create-release.sh`
-**Purpose**: Create release branches and tags with automated versioning
+**Purpose**: Create release branches and tags with intelligent versioning and package.json integration
 ```bash
 ./create-release.sh
 ```
 
-**Features**:
-- Interactive version creation with MM.YYYY.increment format
-- Automatic increment detection (finds next available number)
-- Creates release branch (e.g., `release-03.2025.1`)
-- Creates annotated git tag (e.g., `v03.2025.1`)
-- Optional release naming
-- Safety checks for clean working directory
-- Automatic push to origin (optional)
-- Triggers GitHub Actions deployment workflow
+**Key Features**:
+- **Smart package.json integration**: Auto-reads project info and suggests versions
+- **Intelligent version parsing**: Converts `"version": "2025.09"` to month=09, year=2025
+- **Duplicate prevention**: Prevents creating versions that already exist
+- **Auto-increment detection**: Finds next available number automatically
+- **Recent releases display**: Shows existing releases to help choose increment
+- **Simple and reliable**: Streamlined code for better reliability
+- **GitHub Actions integration**: Automatically triggers deployment
+
+**Package.json Integration**:
+The script automatically reads from `package.json`:
+- `version`: Parsed for month/year suggestions (e.g., "2025.09" → 09.2025)
+- `versionName`: Suggested as release name (e.g., "Open Beta") 
 
 **Version Format**: `MM.YYYY.increment`
 - **MM**: Month (01-12)
-- **YYYY**: Year (2020-2050)
+- **YYYY**: Year (2020-2050) 
 - **increment**: Auto-incremented number starting from 1
 
 **Example Session**:
@@ -30,26 +34,39 @@ This directory contains automation scripts for managing the resume template syst
 ./create-release.sh
 
 🚀 Resume Builder Release Creator
-=================================
+================================
 
-Enter release month (MM) [default: 09]: 03
-Enter release year (YYYY) [default: 2025]: 2025
-Enter increment number [default: 1]: 1
-Enter release name (optional): Spring Launch
+[INFO] Reading package.json...
+[INFO] Found version in package.json: 09.2025
+
+Existing releases for 09.2025:
+  v09.2025.1
+  v09.2025.2
+
+Release month (MM) [09]: 
+Release year (YYYY) [2025]: 
+Increment number [3]: 
+Release name [Open Beta]: 
 
 Release Summary:
-  Version: 03.2025.1
-  Branch:  release-03.2025.1
-  Tag:     v03.2025.1
-  Name:    Spring Launch
+  Version: 09.2025.3
+  Branch:  release-09.2025.3
+  Tag:     v09.2025.3
+  Name:    Open Beta
 
 Create this release? (y/N): y
 ```
 
+**Requirements**:
+- Bash shell
+- Git repository with remote origin
+- `jq` command (optional, for package.json parsing)
+
 **Workflow Integration**:
-- Release branches automatically trigger GitHub Pages deployment
+- Release branches (`release-*`) automatically trigger GitHub Pages deployment
 - Tags provide version tracking and rollback points
-- Follows semantic versioning for clear release identification
+- Integrates with package.json for project metadata
+- Prevents duplicate releases with intelligent conflict detection
 
 ## Template Management Scripts
 
@@ -106,18 +123,40 @@ Create this release? (y/N): y
 git checkout master
 git pull origin master
 
-# 2. Run the release script
-./create-release.sh
+# 2. Install jq if not already installed (optional but recommended)
+# On Ubuntu/Debian: sudo apt install jq
+# On macOS: brew install jq
+# On Fedora: sudo dnf install jq
 
-# 3. Follow interactive prompts
-# - Enter month, year, increment
-# - Optionally name the release
-# - Confirm creation
-# - Optionally push to origin
+# 3. Run the release script from project root
+./scripts/create-release.sh
 
-# 4. Monitor GitHub Actions for deployment
+# 4. Follow interactive prompts:
+#    - Script will auto-suggest month/year from package.json
+#    - Review existing releases for the period
+#    - Choose increment number (auto-suggested)
+#    - Optionally name the release
+#    - Confirm creation
+#    - Optionally push to origin
+
+# 5. Monitor GitHub Actions for deployment
 # Visit: https://github.com/Tu2l/resume-helper/actions
 ```
+
+**Package.json Setup**:
+For optimal script functionality, ensure your `package.json` contains:
+```json
+{
+  "version": "YYYY.MM",
+  "versionName": "Release Codename"
+}
+```
+
+**Troubleshooting**:
+- **"jq not found"**: Install jq package or continue without package.json parsing
+- **"Version already exists"**: Choose a different increment number
+- **"Not in git repository"**: Run from within your git repository
+- **"Invalid octal number"**: Fixed in current version - script handles leading zeros properly
 
 ### Template Management
 
@@ -151,8 +190,8 @@ git pull origin master
 ### Release Scripts
 - Bash shell
 - Git repository with remote origin
+- `jq` command (optional, for package.json parsing)
 - Clean working directory (recommended)
-- Push access to repository
 
 ### Template Scripts
 ### Template Scripts
@@ -163,9 +202,10 @@ git pull origin master
 ## Integration
 
 ### Release Integration
-- **GitHub Actions**: `release-*` branches trigger automatic deployment
-- **Git Tags**: Provide version tracking and release history
-- **GitHub Pages**: Automated deployment to production environment
+- **GitHub Actions**: `release-*` branches trigger automatic deployment to GitHub Pages
+- **Git Tags**: Provide version tracking, release history, and rollback points
+- **Package.json**: Integration for project metadata and intelligent version suggestions
+- **Conflict Prevention**: Duplicate detection prevents version conflicts and deployment issues
 
 ### Template Integration
 ### Template Integration
