@@ -25,6 +25,11 @@ const loadTemplateConfig = async (): Promise<TemplateConfig> => {
     return templateConfigCache;
   }
 
+  // Only load templates on the client side
+  if (typeof window === 'undefined') {
+    return { templates: [] };
+  }
+
   try {
     const url = `${getBaseUrl()}/templates/templates.json`;
     const response = await fetch(url, {
@@ -68,6 +73,11 @@ const templateCache: Record<string, string> = {};
 export const loadTemplate = async (templateName: string): Promise<string> => {
   if (templateCache[templateName]) {
     return templateCache[templateName];
+  }
+
+  // Only load templates on the client side
+  if (typeof window === 'undefined') {
+    throw new Error('Template loading is only available on the client side');
   }
 
   const url = `${getBaseUrl()}/templates/html/${templateName}.html`;

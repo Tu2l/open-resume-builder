@@ -325,38 +325,6 @@ export default function HomePage() {
         }, 100);
     };
 
-    const generatePdf = async () => {
-        try {
-            toast({ title: "Please wait", description: "PDF is being generated" });
-
-            const opt = {
-                margin: [0, 0, 0, 0],
-                filename: `${resumeForm.getValues().fullName.replaceAll(" ", "_")}_resume.pdf`,
-                image: { type: 'png', quality: 1 },
-                html2canvas: {
-                    dpi: 192,
-                    scale: 4,
-                    letterRendering: true,
-                    useCORS: true
-                },
-                jsPDF: {
-                    unit: 'mm',
-                    format: 'a4',
-                    orientation: 'portrait',
-                    compress: true
-                }
-            };
-
-            const html2pdf = (await import('html2pdf.js')).default;
-            await html2pdf(editedHtml, opt);
-
-            toast({ title: "PDF Generated", description: "Your resume PDF has been generated." });
-        } catch (err) {
-            console.error('PDF generation error:', err);
-            toast({ variant: 'destructive', title: "PDF Generation Failed", description: "There was an error generating your resume PDF." });
-        }
-    };
-
     const handleDownloadHtml = () => {
         const content = editedHtml;
         if (!content) {

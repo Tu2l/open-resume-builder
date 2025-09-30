@@ -1,6 +1,6 @@
 {
-  "simpleName":"Open Resume Builder",
-  "versionName":"Open Beta",
+  "simpleName": "Open Resume Builder",
+  "versionName": "Open Beta",
   "name": "open_resume_builder",
   "version": "2025.09",
   "private": true,
@@ -37,7 +37,6 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "handlebars": "^4.7.8",
-    "html2pdf.js": "^0.11.2",
     "lucide-react": "^0.475.0",
     "next": "15.3.3",
     "react": "^18.3.1",
