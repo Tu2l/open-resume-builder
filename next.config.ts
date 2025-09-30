@@ -28,7 +28,8 @@ const nextConfig: NextConfig = {
     APP_VERSION: packageJson.version,
     APP_VERSION_NAME: packageJson.versionName,
   },
-  output: 'export'
+  output: 'export',
+  basePath: '/open-resume-builder'
 };
 
 export default nextConfig;

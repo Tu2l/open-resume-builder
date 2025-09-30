@@ -36,7 +36,8 @@ export default function TemplateThumbnail({ templateId }: { templateId: string }
                 setIsLoading(true);
                 setError('');
 
-                const url =`${getBaseUrl()}/templates/templates.json`;
+                const baseUrl = getBaseUrl();
+                const url =`${baseUrl}/templates/templates.json`;
                 // Load template configuration
                 const response = await fetch(url);
                 if (!response.ok) {
@@ -55,7 +56,7 @@ export default function TemplateThumbnail({ templateId }: { templateId: string }
                 }
 
                 // Construct thumbnail path
-                const thumbnailPath = `/templates/thumbnails/${template.thumbnail}`;
+                const thumbnailPath = `${baseUrl}/templates/thumbnails/${template.thumbnail}`;
                 setThumbnailSrc(thumbnailPath);
             } catch (err) {
                 console.error('Error loading thumbnail:', err);
