@@ -6,12 +6,29 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getBaseUrl(): string {
-  // Determine the base URL dynamically based on the current location
-  if (typeof window !== 'undefined') {
-    return window.location.origin;
-  }
+// Determine the base URL dynamically based on the current location
+if (typeof window !== 'undefined') {
+    const baseUrl = window.location.origin;
+    if (baseUrl.endsWith('tu2l.com')) { // HACK to handle TLD; TODO update 
+        return baseUrl + '/open-resume-builder/';
+    }
+    return baseUrl;
+}
   return ''; 
 }
+
+/**
+ * Retrieves application information from environment variables or defaults.
+ * @returns Application information from environment variables or defaults
+ */
+export function getAppInfo() {
+    return {
+        name: process.env.APP_NAME || 'Open Resume Builder',
+        version: process.env.APP_VERSION || '09.2025.3', // always update before release
+        versionName: process.env.APP_VERSION_NAME || 'Beta',
+    };
+}
+
 
 /**
  * Extracts a JSON object from a string, which may contain markdown code fences.

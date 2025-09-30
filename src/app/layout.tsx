@@ -2,9 +2,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/hooks/use-theme';
+import { getAppInfo } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: `${process.env.APP_NAME}`,
+  title: getAppInfo().name,
   description: 'AI-Powered Resume Creator',
   icons: {
     icon: [
