@@ -184,6 +184,7 @@ For optimal script functionality, ensure your `package.json` contains:
 ```bash
 # Regular validation
 ./validate-templates.sh
+```
 
 ## Script Requirements
 
@@ -193,7 +194,6 @@ For optimal script functionality, ensure your `package.json` contains:
 - `jq` command (optional, for package.json parsing)
 - Clean working directory (recommended)
 
-### Template Scripts
 ### Template Scripts
 - Bash shell
 - Read/write access to `public/templates/` directory
@@ -207,7 +207,6 @@ For optimal script functionality, ensure your `package.json` contains:
 - **Package.json**: Integration for project metadata and intelligent version suggestions
 - **Conflict Prevention**: Duplicate detection prevents version conflicts and deployment issues
 
-### Template Integration
 ### Template Integration
 - **JSON Configuration**: `public/templates/templates.json`
 - **HTML Templates**: `public/templates/html/*.html`
