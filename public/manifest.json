@@ -2,18 +2,18 @@
   "name": "Open Resume Builder",
   "short_name": "Open Resume Builder",
   "description": "AI-Powered Resume Creator",
-  "start_url": "/",
+  "start_url": "/open-resume-builder/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3b82f6",
   "icons": [
     {
-      "src": "/favicon-192x192.png",
+      "src": "/open-resume-builder/favicon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/favicon-512x512.png",
+      "src": "/open-resume-builder/favicon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
