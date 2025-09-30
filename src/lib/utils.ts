@@ -6,15 +6,12 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getBaseUrl(): string {
-// Determine the base URL dynamically based on the current location
-if (typeof window !== 'undefined') {
-    const baseUrl = window.location.origin;
-    if (baseUrl.endsWith('tu2l.com')) { // HACK to handle TLD; TODO update 
-        return baseUrl + '/open-resume-builder/';
+    const basePath = '/open-resume-builder';
+    
+    if (typeof window !== 'undefined') {
+        return window.location.origin + basePath;
     }
-    return baseUrl;
-}
-  return ''; 
+    return basePath;
 }
 
 /**
@@ -22,6 +19,7 @@ if (typeof window !== 'undefined') {
  * @returns Application information from environment variables or defaults
  */
 export function getAppInfo() {
+    // return getConfig(); // Ensure runtime config is loaded
     return {
         name: process.env.APP_NAME || 'Open Resume Builder',
         version: process.env.APP_VERSION || '09.2025.3', // always update before release

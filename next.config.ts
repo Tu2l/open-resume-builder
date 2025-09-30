@@ -7,10 +7,10 @@ const packageJson = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'ut
 const nextConfig: NextConfig = {
   /* config options here */
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   images: {
     remotePatterns: [
@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
     APP_VERSION_NAME: packageJson.versionName,
   },
   output: 'export',
-  basePath: '/open-resume-builder'
+  basePath: packageJson.basePath,
 };
 
 export default nextConfig;

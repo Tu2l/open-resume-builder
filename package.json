@@ -1,6 +1,7 @@
 {
   "simpleName": "Open Resume Builder",
   "versionName": "Open Beta",
+  "basePath": "/open-resume-builder",
   "name": "open_resume_builder",
   "version": "2025.09",
   "private": true,
