@@ -1,5 +1,6 @@
 'use client';
 
+import { getBaseUrl } from '@/lib/utils';
 /**
  * @fileoverview Dynamic thumbnail component for resume templates.
  * Loads template thumbnails dynamically from JSON configuration and SVG files.
@@ -35,8 +36,9 @@ export default function TemplateThumbnail({ templateId }: { templateId: string }
                 setIsLoading(true);
                 setError('');
 
+                const url =`${getBaseUrl()}/templates/templates.json`;
                 // Load template configuration
-                const response = await fetch('/templates/templates.json');
+                const response = await fetch(url);
                 if (!response.ok) {
                     throw new Error(`Failed to load templates configuration: ${response.statusText}`);
                 }
