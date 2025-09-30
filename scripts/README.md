@@ -1,6 +1,41 @@
 # Resume Builder Scripts
 
-This directory contains automation scripts for managing the resume template system and release management.
+This directory contains automation scripts for managing the resume template system, build processes, and release management.
+
+## Build & CI Scripts
+
+### `build-local.sh`
+**Purpose**: Replicate the exact GitHub Actions build process locally
+```bash
+./build-local.sh
+```
+
+**Features**:
+- **Package manager detection**: Auto-detects npm/yarn like GitHub Actions
+- **Clean build process**: Removes previous artifacts before building
+- **Exact CI replication**: Uses same commands as deployment workflow
+- **Static export**: Generates production-ready static files in `out/`
+- **Serving instructions**: Provides commands to test the build locally
+
+### `ci-local.sh`
+**Purpose**: Run the complete CI/CD pipeline locally with all validation steps
+```bash
+./ci-local.sh
+```
+
+**Complete Pipeline**:
+1. **Clean**: Remove all build artifacts and caches
+2. **Install**: Fresh dependency installation
+3. **Type Check**: TypeScript validation (`tsc --noEmit`)
+4. **Lint**: ESLint code quality checks (if configured)
+5. **Build**: Production build with static export
+6. **Verify**: Validate output and show build size
+
+**Use Cases**:
+- Debug CI failures locally
+- Pre-commit validation
+- Release preparation
+- Build troubleshooting
 
 ## Release Management
 
